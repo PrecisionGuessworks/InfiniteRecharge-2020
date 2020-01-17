@@ -7,25 +7,20 @@
 
 package frc.robot.commands;
 
+import java.security.Timestamp;
+
+import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.OI;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
-public class ArcadeDrive extends Command {
-
+public class Drive20ftCommand extends Command {
   private DriveTrainSubsystem drivetrain;
-  private OI oi;
 
-  public double throttle;
-  public double turn;
+  public double startTime;
 
-  public ArcadeDrive() {
+  public Drive20ftCommand() {
     // Use requires() here to declare subsystem dependencies
     // eg. requires(chassis);
-
-    oi = OI.getInstance();
-
     drivetrain = DriveTrainSubsystem.getInstance();
     requires(drivetrain);
   }
@@ -33,16 +28,18 @@ public class ArcadeDrive extends Command {
   // Called just before this Command runs the first time
   @Override
   protected void initialize() {
+    startTime = Timer.getFPGATimestamp();
   }
 
   // Called repeatedly when this Command is scheduled to run
   @Override
   protected void execute() {
-    throttle = oi.getDriverThrottle();
-    turn = oi.getDriverTurn();
-    drivetrain.setDrivePower(throttle - turn, throttle + turn);
-    //drivetrain.setDriveVelocity((throttle - turn) * 25, (throttle + turn) * 25);
-    SmartDashboard.putNumber("Drivetrain Speed", drivetrain.getDriveVelocity());
+    if (Timer.getFPGATimestamp() - startTime > 1){
+      drivetrain.setDrivePower(0, 0);
+    }else{
+      drivetrain.setDrivePower(1.0, 1.0);
+    }
+    
   }
 
   // Make this return true when this Command no longer needs to run execute()
@@ -54,6 +51,7 @@ public class ArcadeDrive extends Command {
   // Called once after isFinished returns true
   @Override
   protected void end() {
+    
   }
 
   // Called when another command which requires one or more of the same

@@ -13,6 +13,7 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.commands.ArcadeDrive;
+import frc.robot.commands.Drive20ftCommand;
 import frc.robot.lib.TalonFXFactory;
 
 /**
@@ -37,12 +38,12 @@ public class DriveTrainSubsystem extends Subsystem {
     double leftkP = 0.0;
     double leftkI = 0.0;
     double leftkD = 0.0;
-    double leftkF = 0.0;
+    double leftkF = 1.0;
     
     double rightkP = 0.0;
     double rightkI = 0.0; 
     double rightkD = 0.0; 
-    double rightkF = 0.0;
+    double rightkF = 1.0;
 
     leftmotor = new TalonFX[3];
     rightmotor = new TalonFX[3];
@@ -60,6 +61,7 @@ public class DriveTrainSubsystem extends Subsystem {
     SmartDashboard.putNumber("Speed", 0.5);
     SmartDashboard.putNumber("Passcode", 0.0);
 
+    SmartDashboard.putNumber("Encoder Counts", 0.0);
 
   }
 
@@ -90,11 +92,22 @@ public class DriveTrainSubsystem extends Subsystem {
     leftmotor[0].set(ControlMode.Velocity, targetVelL * (1./10) * (1./WHEEL_CIRCUMFERENCE) * 4096);
     rightmotor[0].set(ControlMode.Velocity, targetVelR * (1./10) * (1./WHEEL_CIRCUMFERENCE) * 4096);
   }
+  public double getError(){
+    return ((double) leftmotor[0].getClosedLoopError()) * 10.0 * Math.PI * 6.0 / 49152.0;
+  }
+  public double getDriveVelocity(){
+      return (getEncoderCounts() * 10 * Math.PI * 6 / (49152 * 7.56)) * 2;
+  }
+
+  public double getEncoderCounts(){ //this is currently not working
+    return leftmotor[0].getSensorCollection().getIntegratedSensorVelocity();
+  }
 
   @Override
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
-    setDefaultCommand(new ArcadeDrive());
+    setDefaultCommand(new Drive20ftCommand());
+    
   }
 }

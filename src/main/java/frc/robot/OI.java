@@ -8,6 +8,7 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
+import frc.robot.commands.Drive20ftCommand;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -24,6 +25,8 @@ public class OI {
   private OI(){
     driver = new Joystick(0);
     operator = new Joystick(1);
+
+
   }
 
   public static OI getInstance(){
@@ -34,12 +37,12 @@ public class OI {
   }
 
   public double getDriverThrottle(){
-    double throttle = driver.getRawAxis(1);
+    final double throttle = driver.getRawAxis(1);
     return Math.pow(throttle, 2) * (throttle < 0 ? -1 : 1);
   }
 
   public double getDriverTurn(){
-    double turn = driver.getRawAxis(4);
+    final double turn = driver.getRawAxis(4);
     return Math.pow(turn, 2) * (turn < 0 ? -1 : 1);
   }
 
