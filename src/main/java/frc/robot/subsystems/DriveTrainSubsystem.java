@@ -12,7 +12,12 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.commands.ArcadeDrive;
+import edu.wpi.first.wpilibj.spline.Spline.ControlVector;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+//import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.Drive20ftCommand;
 import frc.robot.lib.TalonFXFactory;
 
@@ -25,6 +30,8 @@ public class DriveTrainSubsystem extends Subsystem {
 
   TalonFX[] leftmotor;
   TalonFX[] rightmotor;
+
+  Trajectory testTraj;
 
   public static final double WHEEL_DIAMETER = 6.0;
   public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
@@ -45,6 +52,8 @@ public class DriveTrainSubsystem extends Subsystem {
     double rightkD = 0.0; 
     double rightkF = 1.0;
 
+    
+
     leftmotor = new TalonFX[3];
     rightmotor = new TalonFX[3];
 
@@ -63,15 +72,32 @@ public class DriveTrainSubsystem extends Subsystem {
 
     SmartDashboard.putNumber("Encoder Counts", 0.0);
 
+    
+
+    //testTraj = TrajectoryGenerator.generateTrajectory(new Pose2d(), null, new Pose2d(0, 6.096, null), new TrajectoryConfig(6.096, 7.315));
+
+    testTraj = TrajectoryGenerator.generateTrajectory(new Pose2d(), null, new Pose2d(0, 6.096, null), new TrajectoryConfig(3.048, 3.657));
   }
 
-  public static DriveTrainSubsystem getInstance(){
+  
+
+
+  
+
+public static DriveTrainSubsystem getInstance(){
     if(instance==null){
       instance = new DriveTrainSubsystem();
     }
     return instance;
   }
 
+  public void setSpeedbyTrajectory(double time){
+
+  double velocity = testTraj.sample(time).velocityMetersPerSecond;
+  setDriveVelocity(velocity, velocity);
+
+  }
+  
   public void setDrivePower(final double powL, final double powR){
 
     if (SmartDashboard.getNumber("Passcode", 0.0) == 1539){
@@ -102,6 +128,9 @@ public class DriveTrainSubsystem extends Subsystem {
   public double getEncoderCounts(){ //this is currently not working
     return leftmotor[0].getSensorCollection().getIntegratedSensorVelocity();
   }
+
+
+
 
   @Override
   public void initDefaultCommand() {
