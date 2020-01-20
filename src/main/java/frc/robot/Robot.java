@@ -61,10 +61,15 @@ public class Robot extends TimedRobot {
    */
   @Override
   public void disabledInit() {
+    startTime = -1.0;
+
+    
   }
 
   @Override
   public void disabledPeriodic() {
+
+
     Scheduler.getInstance().run();
   }
 
@@ -108,7 +113,7 @@ public class Robot extends TimedRobot {
     }
 
     drive.setSpeedbyTrajectory(Timer.getFPGATimestamp() - startTime);
-
+    SmartDashboard.putNumber("LeftDriveSpeed", drive.getDriveVelocity());
   }
 
   @Override
@@ -129,9 +134,12 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
 
-    double throttle = m_oi.getDriverThrottle();
-    double turn = m_oi.getDriverTurn();
-    drive.setDrivePower(throttle-turn, throttle+turn);
+    double throttle = m_oi.getDriverThrottle() * 3;
+    double turn = m_oi.getDriverTurn() * 3;
+    //drive.setDrivePower(throttle-turn, throttle+turn);
+    drive.setDriveVelocity(throttle-turn , throttle+turn);
+    SmartDashboard.putNumber("LeftDriveSpeed", drive.getDriveVelocity());
+    SmartDashboard.putNumber("LeftJoy", throttle);
   }
 
   /**

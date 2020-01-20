@@ -51,12 +51,12 @@ public class DriveTrainSubsystem implements Subsystem {
     oi = OI.getInstance();
     
     //TODO: actually do something with our PIDF values
-    double leftkP = 10.0;
+    double leftkP = 2.0;
     double leftkI = 0.0;
     double leftkD = 0.0;
     double leftkF = 0.0;
     
-    double rightkP = 10.0;
+    double rightkP = 2.0;
     double rightkI = 0.0; 
     double rightkD = 0.0; 
     double rightkF = 0.0;
@@ -86,8 +86,11 @@ public class DriveTrainSubsystem implements Subsystem {
     //testTraj = TrajectoryGenerator.generateTrajectory(new Pose2d(), null, new Pose2d(0, 6.096, null), new TrajectoryConfig(6.096, 7.315));
     ArrayList<Pose2d> pointList = new ArrayList<>();
     pointList.add(new Pose2d());
-    pointList.add(new Pose2d(0, 3.048, new Rotation2d()));
-    pointList.add(new Pose2d(0, 6.096, new Rotation2d()));
+    pointList.add(new Pose2d(0, 1, new Rotation2d()));
+    pointList.add(new Pose2d(0, 2, new Rotation2d()));
+
+    //pointList.add(new Pose2d(0, 3.048, new Rotation2d()));
+    //pointList.add(new Pose2d(0, 6.096, new Rotation2d()));
 
     testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(3.048, 3.657));
   }
@@ -128,8 +131,8 @@ public static DriveTrainSubsystem getInstance(){
    * @param targetVelR
    */
   public void setDriveVelocity(final double targetVelL, final double targetVelR){
-    leftmotor[0].set(ControlMode.Velocity, targetVelL * (1./10) * (1./WHEEL_CIRCUMFERENCE) * 4096);
-    rightmotor[0].set(ControlMode.Velocity, targetVelR * (1./10) * (1./WHEEL_CIRCUMFERENCE) * 4096);
+    leftmotor[0].set(ControlMode.Velocity, targetVelL * (1./10) * (1./WHEEL_CIRCUMFERENCE) * 4096 * 2);
+    rightmotor[0].set(ControlMode.Velocity, targetVelR * (1./10) * (1./WHEEL_CIRCUMFERENCE) * 4096 * 2);
   }
 
   public double getError(){

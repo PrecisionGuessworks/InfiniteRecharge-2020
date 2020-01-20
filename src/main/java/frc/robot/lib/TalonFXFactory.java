@@ -29,7 +29,7 @@ public class TalonFXFactory {
         TalonFX talon = new TalonFX(id);
         talon = new TalonFX(id);
         talon.configFactoryDefault();
-        if(talon.configSelectedFeedbackSensor(FeedbackDevice.CTRE_MagEncoder_Relative, 0, 30) != null){
+        if(talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 30) != null){
             System.out.println("ConfigSelectedFeedbackSensor failed");
         }
         talon.setSensorPhase(true);
