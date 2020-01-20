@@ -12,6 +12,13 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.spline.Spline.ControlVector;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+//import frc.robot.commands.ArcadeDrive;
+
 import frc.robot.lib.TalonFXFactory;
 import frc.robot.OI;
 import frc.robot.RobotMap;
@@ -26,6 +33,8 @@ public class DriveTrainSubsystem implements Subsystem {
   TalonFX[] leftmotor;
   TalonFX[] rightmotor;
   public OI oi;
+
+  Trajectory testTraj;
 
   public static final double WHEEL_DIAMETER = 6.0;
   public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
@@ -49,6 +58,8 @@ public class DriveTrainSubsystem implements Subsystem {
     double rightkD = 0.0; 
     double rightkF = 1.0;
 
+    
+
     leftmotor = new TalonFX[3];
     rightmotor = new TalonFX[3];
 
@@ -67,15 +78,32 @@ public class DriveTrainSubsystem implements Subsystem {
 
     SmartDashboard.putNumber("Encoder Counts", 0.0);
 
+    
+
+    //testTraj = TrajectoryGenerator.generateTrajectory(new Pose2d(), null, new Pose2d(0, 6.096, null), new TrajectoryConfig(6.096, 7.315));
+
+    testTraj = TrajectoryGenerator.generateTrajectory(new Pose2d(), null, new Pose2d(0, 6.096, null), new TrajectoryConfig(3.048, 3.657));
   }
 
-  public static DriveTrainSubsystem getInstance(){
+  
+
+
+  
+
+public static DriveTrainSubsystem getInstance(){
     if(instance==null){
       instance = new DriveTrainSubsystem();
     }
     return instance;
   }
 
+  public void setSpeedbyTrajectory(double time){
+
+  double velocity = testTraj.sample(time).velocityMetersPerSecond;
+  setDriveVelocity(velocity, velocity);
+
+  }
+  
   public void setDrivePower(final double powL, final double powR){
 
     if (SmartDashboard.getNumber("Passcode", 0.0) == 1539){
