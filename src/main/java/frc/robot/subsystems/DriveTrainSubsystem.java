@@ -7,6 +7,8 @@
 
 package frc.robot.subsystems;
 
+import java.util.ArrayList;
+
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
@@ -17,6 +19,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 //import frc.robot.commands.ArcadeDrive;
 import frc.robot.commands.Drive20ftCommand;
 import frc.robot.lib.TalonFXFactory;
@@ -42,15 +45,15 @@ public class DriveTrainSubsystem extends Subsystem {
   private DriveTrainSubsystem(){
 
     //TODO: actually do something with our PIDF values
-    double leftkP = 0.0;
+    double leftkP = 10.0;
     double leftkI = 0.0;
     double leftkD = 0.0;
-    double leftkF = 1.0;
+    double leftkF = 0.0;
     
-    double rightkP = 0.0;
+    double rightkP = 10.0;
     double rightkI = 0.0; 
     double rightkD = 0.0; 
-    double rightkF = 1.0;
+    double rightkF = 0.0;
 
     
 
@@ -75,8 +78,12 @@ public class DriveTrainSubsystem extends Subsystem {
     
 
     //testTraj = TrajectoryGenerator.generateTrajectory(new Pose2d(), null, new Pose2d(0, 6.096, null), new TrajectoryConfig(6.096, 7.315));
+    ArrayList<Pose2d> pointList = new ArrayList<>();
+    pointList.add(new Pose2d());
+    pointList.add(new Pose2d(0, 3.048, new Rotation2d()));
+    pointList.add(new Pose2d(0, 6.096, new Rotation2d()));
 
-    testTraj = TrajectoryGenerator.generateTrajectory(new Pose2d(), null, new Pose2d(0, 6.096, null), new TrajectoryConfig(3.048, 3.657));
+    testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(3.048, 3.657));
   }
 
   
@@ -136,7 +143,7 @@ public static DriveTrainSubsystem getInstance(){
   public void initDefaultCommand() {
     // Set the default command for a subsystem here.
     // setDefaultCommand(new MySpecialCommand());
-    setDefaultCommand(new Drive20ftCommand());
+    //setDefaultCommand(new Drive20ftCommand());
     
   }
 }

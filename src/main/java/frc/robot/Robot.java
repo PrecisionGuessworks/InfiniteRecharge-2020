@@ -130,6 +130,9 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
+    double left = OI.getInstance().getDriverThrottle() - OI.getInstance().getDriverTurn();
+    double right = OI.getInstance().getDriverThrottle() + OI.getInstance().getDriverTurn();
+    drive.setDrivePower(left, right);
   }
 
   /**

@@ -38,12 +38,12 @@ public class OI {
 
   public double getDriverThrottle(){
     final double throttle = driver.getRawAxis(1);
-    return Math.pow(throttle, 2) * (throttle < 0 ? -1 : 1);
+    return Math.pow(throttle, 3) * -1.0;// * (throttle < 0 ? -1 : 1);
   }
 
   public double getDriverTurn(){
     final double turn = driver.getRawAxis(4);
-    return Math.pow(turn, 2) * (turn < 0 ? -1 : 1);
+    return Math.pow(turn, 3) * 0.5;// * (turn < 0 ? -1 : 1);
   }
 
   //// CREATING BUTTONS
