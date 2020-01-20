@@ -8,7 +8,6 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.Joystick;
-import frc.robot.commands.Drive20ftCommand;
 
 /**
  * This class is the glue that binds the controls on the physical operator

@@ -22,9 +22,18 @@ public class ShooterSubsystem extends SubsystemBase {
   private TalonFX upperFlywheel;
   private TalonFX lowerFlywheel;
 
-  public ShooterSubsystem() {
+  public static ShooterSubsystem instance;
+
+  private ShooterSubsystem() {
     upperFlywheel = TalonFXFactory.createPIDTalonFX(RobotMap.UPPER_FLYWHEEL_ID, false, 0.0, 0.0, 0.0, 0.0);
     lowerFlywheel = TalonFXFactory.createPIDTalonFX(RobotMap.LOWER_FLYWHEEL_ID, true, 0.0, 0.0, 0.0, 0.0);
+  }
+
+  public static ShooterSubsystem getInstance(){
+    if(instance==null){
+      instance = new ShooterSubsystem();
+    }
+    return instance;
   }
 
   public void setShooterPower(double upperPower, double lowerPower){
