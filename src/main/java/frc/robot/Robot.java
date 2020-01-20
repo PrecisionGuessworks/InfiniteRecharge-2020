@@ -13,9 +13,7 @@ import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-//import frc.robot.commands.ExampleCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
-//import frc.robot.subsystems.ExampleSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -130,9 +128,10 @@ public class Robot extends TimedRobot {
   @Override
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
-    double left = OI.getInstance().getDriverThrottle() - OI.getInstance().getDriverTurn();
-    double right = OI.getInstance().getDriverThrottle() + OI.getInstance().getDriverTurn();
-    drive.setDrivePower(left, right);
+
+    double throttle = m_oi.getDriverThrottle();
+    double turn = m_oi.getDriverTurn();
+    drive.setDrivePower(throttle-turn, throttle+turn);
   }
 
   /**
