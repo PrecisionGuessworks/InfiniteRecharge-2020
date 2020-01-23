@@ -37,7 +37,7 @@ public class OI {
 
   public double getDriverThrottle(){
     final double throttle = driver.getRawAxis(1);
-    return Math.pow(throttle, 3) * -1.0;// * (throttle < 0 ? -1 : 1);
+    return Math.pow(throttle, 3);// * (throttle < 0 ? -1 : 1);
   }
 
   public double getDriverTurn(){

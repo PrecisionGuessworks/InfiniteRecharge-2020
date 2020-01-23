@@ -99,6 +99,8 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.start();
     }
+    drive.zeroEncoders();
+
   }
 
   /**
@@ -111,9 +113,10 @@ public class Robot extends TimedRobot {
     if (startTime == -1.0){
       startTime = Timer.getFPGATimestamp();
     }
-
-    drive.setSpeedbyTrajectory(Timer.getFPGATimestamp() - startTime);
+    double setSpeed = drive.setSpeedbyTrajectory(Timer.getFPGATimestamp() - startTime);
+    SmartDashboard.putNumber("Trajectory Speeds", setSpeed);
     SmartDashboard.putNumber("LeftDriveSpeed", drive.getDriveVelocity());
+    SmartDashboard.putNumber("LeftDrivePosition", drive.getDrivePosition());
   }
 
   @Override
@@ -134,11 +137,11 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
 
-    double throttle = m_oi.getDriverThrottle() * 3;
-    double turn = m_oi.getDriverTurn() * 3;
-    //drive.setDrivePower(throttle-turn, throttle+turn);
+    double throttle = m_oi.getDriverThrottle() * 20;
+    double turn = m_oi.getDriverTurn() * 20;
+   // drive.setDrivePower(throttle-turn, throttle+turn);
     drive.setDriveVelocity(throttle-turn , throttle+turn);
-    SmartDashboard.putNumber("LeftDriveSpeed", drive.getDriveVelocity());
+    SmartDashboard.putNumber("LeftDriveEroor", drive.getError());
     SmartDashboard.putNumber("LeftJoy", throttle);
   }
 

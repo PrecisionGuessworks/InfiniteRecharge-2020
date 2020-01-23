@@ -32,7 +32,7 @@ public class TalonFXFactory {
         if(talon.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor, 0, 30) != null){
             System.out.println("ConfigSelectedFeedbackSensor failed");
         }
-        talon.setSensorPhase(true);
+        talon.setSensorPhase(false);
         talon.configNominalOutputForward(0, 30);
         talon.configNominalOutputReverse(0, 30);
         talon.configPeakOutputForward(1, 30);

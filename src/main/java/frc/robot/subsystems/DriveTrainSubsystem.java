@@ -10,6 +10,8 @@ package frc.robot.subsystems;
 import java.util.ArrayList;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -42,6 +44,15 @@ public class DriveTrainSubsystem implements Subsystem {
   public static final double WHEEL_DIAMETER = 6.0;
   public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
 
+  /*
+  fps x 1s/10hms x 12 in/1 ft x 1 wrev/ 6pi in x 7.56 mrev/ 1 wrev x 2048 counts/ 1 mrev
+  hms = hundred milliseconds wrev = wheel rev mrev = motor rev
+  */
+
+  public static final double FPS_TO_CP100MS = (1./10) * 12 * (1./WHEEL_CIRCUMFERENCE) * 2048 * 7.56;
+  public static final double MAX_VEL = 20; //fps 
+  public static final double KV = 1/MAX_VEL;
+  public static final double COUNTS_TO_FEET = (1/12.0) * WHEEL_CIRCUMFERENCE * (1/2048.0) * (1/7.56); 
   private static DriveTrainSubsystem instance;
   
   
@@ -51,12 +62,12 @@ public class DriveTrainSubsystem implements Subsystem {
     oi = OI.getInstance();
     
     //TODO: actually do something with our PIDF values
-    double leftkP = 2.0;
+    double leftkP = 0.12;
     double leftkI = 0.0;
     double leftkD = 0.0;
     double leftkF = 0.0;
     
-    double rightkP = 2.0;
+    double rightkP = 0.12;
     double rightkI = 0.0; 
     double rightkD = 0.0; 
     double rightkF = 0.0;
@@ -66,14 +77,13 @@ public class DriveTrainSubsystem implements Subsystem {
     leftmotor = new TalonFX[3];
     rightmotor = new TalonFX[3];
 
-    leftmotor[0] = TalonFXFactory.createPIDTalonFX(RobotMap.DRIVETRAIN_LEFT_MASTER, true, leftkP, leftkI, leftkD, leftkF);
+    leftmotor[0] = TalonFXFactory.createPIDTalonFX(RobotMap.DRIVETRAIN_LEFT_MASTER, false, leftkP, leftkI, leftkD, leftkF);
     leftmotor[1] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_LEFT_FOLLOWER1, leftmotor[0]);
     leftmotor[2] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_LEFT_FOLLOWER2, leftmotor[0]);
 
-    rightmotor[0] = TalonFXFactory.createPIDTalonFX(RobotMap.DRIVETRAIN_RIGHT_MASTER, false, rightkP, rightkI, rightkD, rightkF);
+    rightmotor[0] = TalonFXFactory.createPIDTalonFX(RobotMap.DRIVETRAIN_RIGHT_MASTER, true, rightkP, rightkI, rightkD, rightkF);
     rightmotor[1] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_RIGHT_FOLLOWER1, rightmotor[0]);
     rightmotor[2] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_RIGHT_FOLLOWER2, rightmotor[0]);
-
 
 
     SmartDashboard.putNumber("Speed", 0.5);
@@ -86,13 +96,17 @@ public class DriveTrainSubsystem implements Subsystem {
     //testTraj = TrajectoryGenerator.generateTrajectory(new Pose2d(), null, new Pose2d(0, 6.096, null), new TrajectoryConfig(6.096, 7.315));
     ArrayList<Pose2d> pointList = new ArrayList<>();
     pointList.add(new Pose2d());
-    pointList.add(new Pose2d(0, 1, new Rotation2d()));
-    pointList.add(new Pose2d(0, 2, new Rotation2d()));
+    pointList.add(new Pose2d(0, 5, new Rotation2d()));
+    pointList.add(new Pose2d(0, 10, new Rotation2d()));
 
     //pointList.add(new Pose2d(0, 3.048, new Rotation2d()));
     //pointList.add(new Pose2d(0, 6.096, new Rotation2d()));
 
-    testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(3.048, 3.657));
+   // testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(3.048, 3.657));
+   testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(5, 24));
+
+
+
   }
 
   
@@ -107,10 +121,11 @@ public static DriveTrainSubsystem getInstance(){
     return instance;
   }
 
-  public void setSpeedbyTrajectory(double time){
+  public double setSpeedbyTrajectory(double time){
 
   double velocity = testTraj.sample(time).velocityMetersPerSecond;
   setDriveVelocity(velocity, velocity);
+  return velocity;
 
   }
   
@@ -131,21 +146,32 @@ public static DriveTrainSubsystem getInstance(){
    * @param targetVelR
    */
   public void setDriveVelocity(final double targetVelL, final double targetVelR){
-    leftmotor[0].set(ControlMode.Velocity, targetVelL * (1./10) * (1./WHEEL_CIRCUMFERENCE) * 4096 * 2);
-    rightmotor[0].set(ControlMode.Velocity, targetVelR * (1./10) * (1./WHEEL_CIRCUMFERENCE) * 4096 * 2);
+    //TODO motor.set(ControlMode.Velocity, vel, DemandType.ArbitraryFeedForward, feedforward);
+    leftmotor[0].set(ControlMode.Velocity, targetVelL * FPS_TO_CP100MS, DemandType.ArbitraryFeedForward, targetVelL * KV);
+    rightmotor[0].set(ControlMode.Velocity, targetVelR * FPS_TO_CP100MS, DemandType.ArbitraryFeedForward, targetVelR * KV);
+    
   }
 
   public double getError(){
-    return ((double) leftmotor[0].getClosedLoopError()) * 10.0 * Math.PI * 6.0 / 49152.0;
+    return ((double) leftmotor[0].getClosedLoopError()) / FPS_TO_CP100MS;
   }
 
   public double getDriveVelocity(){
-      return (getEncoderCounts() * 10 * Math.PI * 6. / (49152 * 7.56)) * 2;
+      //return (getEncoderCounts() * 10 * Math.PI * 6. / (49152 * 7.56)) * 2;
+      return (getEncoderCounts() / FPS_TO_CP100MS);
   }
 
   public double getEncoderCounts(){ //this is currently not working
-    return leftmotor[0].getSensorCollection().getIntegratedSensorVelocity();
+    return leftmotor[0].getSelectedSensorVelocity();
   }
+  public double getDrivePosition(){
+    return leftmotor[0].getSelectedSensorPosition() * COUNTS_TO_FEET;
+  }
+  public void zeroEncoders(){
+    leftmotor[0].setSelectedSensorPosition(0);
+    rightmotor[0].setSelectedSensorPosition(0);
+  }
+
 
   public void periodic(){
     double throttle = oi.getDriverThrottle();
