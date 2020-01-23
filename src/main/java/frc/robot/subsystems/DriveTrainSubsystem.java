@@ -11,15 +11,15 @@ import java.util.ArrayList;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
-import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import edu.wpi.first.wpiutil.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj.spline.Spline.ControlVector;
 import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
 import edu.wpi.first.wpilibj.geometry.Rotation2d;
 //import frc.robot.commands.ArcadeDrive;
@@ -41,8 +41,17 @@ public class DriveTrainSubsystem implements Subsystem {
 
   Trajectory testTraj;
 
+  DifferentialDrive diffDrive;
+
   public static final double WHEEL_DIAMETER = 6.0;
   public static final double WHEEL_CIRCUMFERENCE = WHEEL_DIAMETER * Math.PI;
+  public static final double kDefaultQuickStopThreshold = 0.2;
+  public static final double kDefaultQuickStopAlpha = 0.1;
+
+  private double m_quickStopThreshold = kDefaultQuickStopThreshold;
+  private double m_quickStopAlpha = kDefaultQuickStopAlpha;
+  private double m_quickStopAccumulator;
+  
 
   /*
   fps x 1s/10hms x 12 in/1 ft x 1 wrev/ 6pi in x 7.56 mrev/ 1 wrev x 2048 counts/ 1 mrev
@@ -129,11 +138,73 @@ public static DriveTrainSubsystem getInstance(){
 
   }
   
+  public void setDrivePowerWithCurvature(double xSpeed, double zRotation, boolean isQuickTurn){
+    xSpeed = MathUtil.clamp(xSpeed, -1.0, 1.0);
+    //xSpeed = applyDeadband(xSpeed, m_deadband);
+
+    zRotation = MathUtil.clamp(zRotation, -1.0, 1.0);
+    //zRotation = applyDeadband(zRotation, m_deadband);
+
+    double angularPower;
+    boolean overPower;
+
+    if (isQuickTurn) {
+      if (Math.abs(xSpeed) < m_quickStopThreshold) {
+        m_quickStopAccumulator = (1 - m_quickStopAlpha) * m_quickStopAccumulator
+            + m_quickStopAlpha * MathUtil.clamp(zRotation, -1.0, 1.0) * 2;
+      }
+      overPower = true;
+      angularPower = zRotation;
+    } else {
+      overPower = false;
+      angularPower = Math.abs(xSpeed) * zRotation - m_quickStopAccumulator;
+
+      if (m_quickStopAccumulator > 1) {
+        m_quickStopAccumulator -= 1;
+      } else if (m_quickStopAccumulator < -1) {
+        m_quickStopAccumulator += 1;
+      } else {
+        m_quickStopAccumulator = 0.0;
+      }
+    }
+
+    double leftMotorOutput = xSpeed - angularPower;
+    double rightMotorOutput = xSpeed + angularPower;
+
+    // If rotation is overpowered, reduce both outputs to within acceptable range
+    if (overPower) {
+      if (leftMotorOutput > 1.0) {
+        rightMotorOutput -= leftMotorOutput - 1.0;
+        leftMotorOutput = 1.0;
+      } else if (rightMotorOutput > 1.0) {
+        leftMotorOutput -= rightMotorOutput - 1.0;
+        rightMotorOutput = 1.0;
+      } else if (leftMotorOutput < -1.0) {
+        rightMotorOutput -= leftMotorOutput + 1.0;
+        leftMotorOutput = -1.0;
+      } else if (rightMotorOutput < -1.0) {
+        leftMotorOutput -= rightMotorOutput + 1.0;
+        rightMotorOutput = -1.0;
+      }
+    }
+
+    // Normalize the wheel speeds
+    double maxMagnitude = Math.max(Math.abs(leftMotorOutput), Math.abs(rightMotorOutput));
+    if (maxMagnitude > 1.0) {
+      leftMotorOutput /= maxMagnitude;
+      rightMotorOutput /= maxMagnitude;
+    }
+
+    leftmotor[0].set(ControlMode.PercentOutput, leftMotorOutput * 0.5);
+    rightmotor[0].set(ControlMode.PercentOutput, rightMotorOutput * 0.5);
+  }
+
   public void setDrivePower(final double powL, final double powR){
 
     if (SmartDashboard.getNumber("Passcode", 0.0) == 1539){
       leftmotor[0].set(ControlMode.PercentOutput, powL * SmartDashboard.getNumber("Speed", 0.5));
       rightmotor[0].set(ControlMode.PercentOutput, powR * SmartDashboard.getNumber("Speed", 0.5));
+
     }else{
       leftmotor[0].set(ControlMode.PercentOutput, powL * 0.5);
       rightmotor[0].set(ControlMode.PercentOutput, powR * 0.5);
@@ -179,5 +250,6 @@ public static DriveTrainSubsystem getInstance(){
     setDrivePower(throttle-turn, throttle+turn);
     //setDriveVelocity((throttle-turn)*25, (throttle+turn)*25);
     System.out.println("throttle:" + throttle);
+    
   }
 }

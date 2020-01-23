@@ -137,12 +137,10 @@ public class Robot extends TimedRobot {
   public void teleopPeriodic() {
     Scheduler.getInstance().run();
 
-    double throttle = m_oi.getDriverThrottle() * 20;
-    double turn = m_oi.getDriverTurn() * 20;
-   // drive.setDrivePower(throttle-turn, throttle+turn);
-    drive.setDriveVelocity(throttle-turn , throttle+turn);
-    SmartDashboard.putNumber("LeftDriveEroor", drive.getError());
-    SmartDashboard.putNumber("LeftJoy", throttle);
+    double throttle = m_oi.getDriverThrottle();
+    double turn = m_oi.getDriverTurn();
+    //drive.setDrivePower(throttle-turn, throttle+turn);
+    drive.setDrivePowerWithCurvature(throttle, turn, false);
   }
 
   /**
