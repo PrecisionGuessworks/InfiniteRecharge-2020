@@ -183,8 +183,8 @@ public static DriveTrainSubsystem getInstance(){
       rightMotorOutput /= maxMagnitude;
     }
 
-    leftmotor[0].set(ControlMode.PercentOutput, leftMotorOutput);
-    rightmotor[0].set(ControlMode.PercentOutput, rightMotorOutput);
+    leftmotor[0].set(ControlMode.PercentOutput, leftMotorOutput * 0.5);
+    rightmotor[0].set(ControlMode.PercentOutput, rightMotorOutput * 0.5);
   }
 
   public void setDrivePower(final double powL, final double powR){
