@@ -131,7 +131,8 @@ public class Robot extends TimedRobot {
 
     double throttle = m_oi.getDriverThrottle();
     double turn = m_oi.getDriverTurn();
-    drive.setDrivePower(throttle-turn, throttle+turn);
+    //drive.setDrivePower(throttle-turn, throttle+turn);
+    drive.setDrivePowerWithCurvature(throttle, turn, false);
   }
 
   /**
