@@ -140,7 +140,16 @@ public class Robot extends TimedRobot {
     double throttle = m_oi.getDriverThrottle();
     double turn = m_oi.getDriverTurn();
     //drive.setDrivePower(throttle-turn, throttle+turn);
-    drive.setDrivePowerWithCurvature(throttle, turn, false);
+    
+    //Enables QuickTurn when right bumper of driver joystick is held
+    if(m_oi.driver.getRawButton(6)==false){
+      drive.setDrivePowerWithCurvature(throttle, turn, false);
+    }else{
+      drive.setDrivePowerWithCurvature(throttle, turn, true);
+    }
+    
+
+    SmartDashboard.putNumber("getVelocity", drive.getDriveVelocity());
   }
 
   /**

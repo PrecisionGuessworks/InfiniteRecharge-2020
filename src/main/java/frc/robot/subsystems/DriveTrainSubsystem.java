@@ -168,8 +168,9 @@ public static DriveTrainSubsystem getInstance(){
       }
     }
 
-    double leftMotorOutput = xSpeed - angularPower;
-    double rightMotorOutput = xSpeed + angularPower;
+    //If it's turning the wrong direction on joysticks switch these signs
+    double leftMotorOutput = xSpeed + angularPower;
+    double rightMotorOutput = xSpeed - angularPower;
 
     // If rotation is overpowered, reduce both outputs to within acceptable range
     if (overPower) {
