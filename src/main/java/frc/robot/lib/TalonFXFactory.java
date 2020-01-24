@@ -17,28 +17,23 @@ import com.ctre.phoenix.motorcontrol.can.TalonFX;
 public class TalonFXFactory {
 
     //Constants for configuring the current (as in amps) draw limits for the motor
-    boolean enable = true;
-    double currentLimit = 8;
-    double thresholdCurrent = currentLimit;
-    double thresholdTime = 0;
-    public static SupplyCurrentLimitConfiguration currLim;
+    static boolean enable = true;
+    static double currentLimit = 8;
+    static double thresholdCurrent = currentLimit;
+    static double thresholdTime = 0;
+    static SupplyCurrentLimitConfiguration currLim = new SupplyCurrentLimitConfiguration(enable, currentLimit, thresholdCurrent, thresholdTime);
 
-    public TalonFXFactory(){
-        currLim = new SupplyCurrentLimitConfiguration(enable, currentLimit, thresholdCurrent, thresholdTime);
-    }
 
     public static TalonFX createTalonFX(int id){ //Creates Talon with id
         TalonFX talon = new TalonFX(id);
-        SupplyCurrentLimitConfiguration c = currLim;
-        talon.configSupplyCurrentLimit(c);
+        talon.configSupplyCurrentLimit(currLim);
         return talon;
     }
 
     public static TalonFX createTalonFX(int id, boolean inverted){ //Creates Talon with id and inversion
         TalonFX talon = new TalonFX(id);
         talon.setInverted(inverted);
-        SupplyCurrentLimitConfiguration c = currLim;
-        talon.configSupplyCurrentLimit(c);
+        talon.configSupplyCurrentLimit(currLim);
         return talon;
     }
 
@@ -58,8 +53,7 @@ public class TalonFXFactory {
         talon.config_kI(0, kI, 30);
         talon.config_kD(0, kD, 30);
         talon.config_kF(0, kF, 30);
-        SupplyCurrentLimitConfiguration c = currLim;
-        talon.configSupplyCurrentLimit(c);
+        talon.configSupplyCurrentLimit(currLim);
         return talon;
         
     }
@@ -67,8 +61,7 @@ public class TalonFXFactory {
     public static TalonFX createPIDTalonFX(int id, boolean inverted, double kP, double kI, double kD, double kF){
         TalonFX talon = createPIDTalonFX(id, kP, kI, kD, kF);
         talon.setInverted(inverted);
-        SupplyCurrentLimitConfiguration c = currLim;
-        talon.configSupplyCurrentLimit(c);
+        talon.configSupplyCurrentLimit(currLim);
         return talon;
     }
 
@@ -78,8 +71,7 @@ public class TalonFXFactory {
         TalonFX followerTalon = new TalonFX(id);
         followerTalon.setInverted(master.getInverted()); //Sets inverted to the masters inverted
         followerTalon.follow(master);
-        SupplyCurrentLimitConfiguration c = currLim;
-        followerTalon.configSupplyCurrentLimit(c);
+        followerTalon.configSupplyCurrentLimit(currLim);
         return followerTalon;
     }
 
