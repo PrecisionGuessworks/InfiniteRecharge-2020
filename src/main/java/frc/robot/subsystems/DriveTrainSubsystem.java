@@ -114,7 +114,7 @@ public class DriveTrainSubsystem implements Subsystem {
    // testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(3.048, 3.657));
    testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(5, 24));
 
-
+  
 
   }
 
