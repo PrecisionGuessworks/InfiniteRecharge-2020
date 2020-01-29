@@ -18,6 +18,12 @@ public class IntakeSubsystem extends SubsystemBase {
    * Creates a new IntakeSubsystem.
   */
 
+  public enum intakeStates {
+    STAGING, //Feeding the balls until sensor sees balls
+    FEEDING, //Loading balls into shooter
+    OFF; //No motors are spinning
+  }
+
   private VictorSPX intakeMotor;
 
   public IntakeSubsystem() {

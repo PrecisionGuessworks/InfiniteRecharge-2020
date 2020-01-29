@@ -13,6 +13,13 @@ public class ClimberSubsystem extends SubsystemBase {
   /**
    * Creates a new ClimberSubsystem.
    */
+  public enum climberStates{
+    CLIMBING, //Allow climber full range of motion without locking
+    HANGING, //Moves to locked and fully retracted
+    STOWED; //Keeps the climber under 45 inches and not locked
+
+  }
+
   public ClimberSubsystem() {
 
   }

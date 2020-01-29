@@ -35,6 +35,11 @@ public class DriveTrainSubsystem implements Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
+public enum driveTrainStates {
+  OPEN_LOOP, //Driving without a control loop
+  PATH_FOLLOWING; //Driving with a control loop
+}
+
   TalonFX[] leftmotor;
   TalonFX[] rightmotor;
   public OI oi;

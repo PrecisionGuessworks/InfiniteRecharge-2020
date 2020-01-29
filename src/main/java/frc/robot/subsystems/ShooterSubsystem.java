@@ -19,6 +19,13 @@ public class ShooterSubsystem extends SubsystemBase {
    * Creates a new ShooterSubsystem.
   */
 
+  public enum shooterStates {
+    STATIONARY, //Not moving, sets motors to coast mode
+    LONG_SHOT, //Shoot from far side of field, allow limelight to zoom
+    PRECISION_SHOT, //Especially aligns with 3 point shot
+    QUICK_SHOT; //Aims for 3 pointers, will shoot at 2 pointers
+  }
+
   private TalonFX upperFlywheel;
   private TalonFX lowerFlywheel;
 
