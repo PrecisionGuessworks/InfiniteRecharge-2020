@@ -28,6 +28,8 @@ public class RobotMap {
   public static int LOWER_FLYWHEEL_ID = 0;
   public static int INTAKE_MOTOR_ID = 0;
 
+  public static int CLIMB_MOTOR_ID = 0;
+
   public static int DRIVETRAIN_LEFT_MASTER = 10;
   public static int DRIVETRAIN_LEFT_FOLLOWER1 = 11;
   public static int DRIVETRAIN_LEFT_FOLLOWER2 = 12;

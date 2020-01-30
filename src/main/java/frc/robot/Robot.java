@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj.command.Scheduler;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.util.Logger;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -26,9 +27,14 @@ public class Robot extends TimedRobot {
   //public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
   public static OI m_oi;
   public static DriveTrainSubsystem drive = DriveTrainSubsystem.getInstance();
+
+  public static final double QTURN_THRESHOLD = 0.1;
+  public  static Logger logger;
   double startTime = -1.0;
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
+
+  double lastLoop = 0;
 
   /**
    * This function is run when the robot is first started up and should be
@@ -40,6 +46,7 @@ public class Robot extends TimedRobot {
     //m_chooser.setDefaultOption("Default Auto", new ExampleCommand());
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
+    logger = new Logger();
   }
 
   /**
@@ -63,6 +70,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     startTime = -1.0;
 
+    logger.flush("ImplementingTest0");
     
   }
 
@@ -125,6 +133,11 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
+    logger.createLogStream("ImplementingTest0");
+    if (startTime == -1.0){
+      startTime = Timer.getFPGATimestamp();
+    }
+
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
@@ -140,12 +153,22 @@ public class Robot extends TimedRobot {
     double throttle = m_oi.getDriverThrottle();
     double turn = m_oi.getDriverTurn();
     boolean quickturn = m_oi.driver.getRawButton(6);
-    //drive.setDrivePower(throttle-turn, throttle+turn);
+    //drive.setDrivePower(throttle+turn, throttle-turn);
     
-    //Enables QuickTurn when right bumper of driver joystick is held
+    if (Math.abs(throttle) < QTURN_THRESHOLD) {
+      quickturn = true;
+    }
+    
     drive.setDrivePowerWithCurvature(throttle, turn, quickturn);
 
-    SmartDashboard.putNumber("getVelocity", drive.getDriveVelocity());
+    //SmartDashboard.putNumber("getVelocity", drive.getDriveVelocity());
+
+    //runs every 100ms
+    
+    if (Timer.getFPGATimestamp() - lastLoop > 0.05) {
+      logger.logDoubles("ImplementingTest0", Timer.getFPGATimestamp(), drive.getDriveVelocity());
+      lastLoop = Timer.getFPGATimestamp();
+    }
   }
 
   /**

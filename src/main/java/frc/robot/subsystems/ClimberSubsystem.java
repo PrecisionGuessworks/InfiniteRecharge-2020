@@ -7,14 +7,26 @@
 
 package frc.robot.subsystems;
 
+import com.ctre.phoenix.motorcontrol.ControlMode;
+import com.ctre.phoenix.motorcontrol.can.TalonFX;
+
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.RobotMap;
+import frc.robot.lib.TalonFXFactory;
 
 public class ClimberSubsystem extends SubsystemBase {
   /**
    * Creates a new ClimberSubsystem.
    */
-  public ClimberSubsystem() {
 
+   private TalonFX climbmotor;
+
+  public ClimberSubsystem() {
+    climbmotor = TalonFXFactory.createPIDTalonFX(RobotMap.CLIMB_MOTOR_ID, 0.0, 0.0, 0.0, 0.0);
+  }
+
+  public void setClimberPower(double pow){
+    climbmotor.set(ControlMode.PercentOutput, pow);
   }
 
   @Override
