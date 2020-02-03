@@ -43,6 +43,7 @@ public enum driveTrainStates {
   TalonFX[] leftmotor;
   TalonFX[] rightmotor;
   public OI oi;
+  public static final double driverPowerReduction = 0.75;
 
   Trajectory testTraj;
 
@@ -201,8 +202,8 @@ public static DriveTrainSubsystem getInstance(){
       rightMotorOutput /= maxMagnitude;
     }
 
-    leftmotor[0].set(ControlMode.PercentOutput, leftMotorOutput * 0.5);
-    rightmotor[0].set(ControlMode.PercentOutput, rightMotorOutput * 0.5);
+    leftmotor[0].set(ControlMode.PercentOutput, leftMotorOutput * driverPowerReduction);
+    rightmotor[0].set(ControlMode.PercentOutput, rightMotorOutput * driverPowerReduction);
   }
 
   public void setDrivePower(final double powL, final double powR){
