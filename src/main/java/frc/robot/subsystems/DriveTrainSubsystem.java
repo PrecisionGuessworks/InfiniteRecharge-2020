@@ -100,15 +100,24 @@ public class DriveTrainSubsystem implements Subsystem {
 
     SmartDashboard.putNumber("Encoder Counts", 0.0);
 
+    SmartDashboard.putNumber("leftmotorkP", leftkP);
+    SmartDashboard.putNumber("leftmotorkI", leftkI);
+    SmartDashboard.putNumber("leftmotorkD", leftkD);
+    SmartDashboard.putNumber("leftmotorkF", leftkF);
+    SmartDashboard.putNumber("rightmotorkP", rightkP);
+    SmartDashboard.putNumber("rightmotorkI", rightkI);
+    SmartDashboard.putNumber("rightmotorkD", rightkD);
+    SmartDashboard.putNumber("rightmotorkF",rightkF);
+
     
 
     //testTraj = TrajectoryGenerator.generateTrajectory(new Pose2d(), null, new Pose2d(0, 6.096, null), new TrajectoryConfig(6.096, 7.315));
     ArrayList<Pose2d> pointList = new ArrayList<>();
     pointList.add(new Pose2d());
-    pointList.add(new Pose2d(0, 5, new Rotation2d(Math.PI/2)));
-    pointList.add(new Pose2d(5, 5, new Rotation2d(Math.PI)));
-    pointList.add(new Pose2d(5, 0, new Rotation2d((3*Math.PI)/2)));
-    pointList.add(new Pose2d(0, 0, new Rotation2d(2*Math.PI)));
+    //pointList.add(new Pose2d(0, 5, new Rotation2d(Math.PI/2)));
+    //pointList.add(new Pose2d(5, 5, new Rotation2d(Math.PI)));
+    //pointList.add(new Pose2d(5, 0, new Rotation2d((3*Math.PI)/2)));
+    pointList.add(new Pose2d(0, 5, new Rotation2d(2*Math.PI)));
 
 
     //pointList.add(new Pose2d(0, 3.048, new Rotation2d()));
@@ -233,13 +242,19 @@ public static DriveTrainSubsystem getInstance(){
     return ((double) leftmotor[0].getClosedLoopError()) / FPS_TO_CP100MS;
   }
 
-  public double getDriveVelocity(){
+  public double getLeftDriveVelocity(){
       //return (getEncoderCounts() * 10 * Math.PI * 6. / (49152 * 7.56)) * 2;
-      return (getEncoderCounts() / FPS_TO_CP100MS);
+      return (getLeftEncoderCounts() / FPS_TO_CP100MS);
+  }
+  public double getRightDriveVelocity(){
+    return (getRightEncoderCounts() / FPS_TO_CP100MS);
   }
 
-  public double getEncoderCounts(){ //this is currently not working
+  public double getLeftEncoderCounts(){
     return leftmotor[0].getSelectedSensorVelocity();
+  }
+  public double getRightEncoderCounts(){
+    return rightmotor[0].getSelectedSensorVelocity();
   }
   public double getDrivePosition(){
     return leftmotor[0].getSelectedSensorPosition() * COUNTS_TO_FEET;
@@ -257,5 +272,15 @@ public static DriveTrainSubsystem getInstance(){
     //setDriveVelocity((throttle-turn)*25, (throttle+turn)*25);
     System.out.println("throttle:" + throttle);
     
+  }
+  public void updateDrivePIDF(){
+    leftmotor[0].config_kP(0, SmartDashboard.getNumber("leftmotorkP", 0), 30);
+    leftmotor[0].config_kI(0, SmartDashboard.getNumber("leftmotorkI",0), 30);
+    leftmotor[0].config_kD(0, SmartDashboard.getNumber("leftmotorkD",0),30);
+    leftmotor[0].config_kF(0, SmartDashboard.getNumber("leftmotorkF", 0), 30);
+    rightmotor[0].config_kP(0, SmartDashboard.getNumber("rightmotorkP",0), 30);
+    rightmotor[0].config_kI(0, SmartDashboard.getNumber("rightmotorkI", 0), 30);
+    rightmotor[0].config_kD(0, SmartDashboard.getNumber("rightmotorkD",0), 30);
+    rightmotor[0].config_kF(0, SmartDashboard.getNumber("rightmotorkF", 0), 30);
   }
 }

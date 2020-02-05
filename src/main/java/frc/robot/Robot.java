@@ -36,6 +36,8 @@ public class Robot extends TimedRobot {
 
   double lastLoop = 0;
 
+
+
   /**
    * This function is run when the robot is first started up and should be
    * used for any initialization code.
@@ -47,6 +49,8 @@ public class Robot extends TimedRobot {
     // chooser.addOption("My Auto", new MyAutoCommand());
     SmartDashboard.putData("Auto mode", m_chooser);
     logger = new Logger();
+
+    logger.createLogStream("DrivetrainLog");
   }
 
   /**
@@ -123,7 +127,7 @@ public class Robot extends TimedRobot {
     }
     double setSpeed = drive.setSpeedbyTrajectory(Timer.getFPGATimestamp() - startTime);
     SmartDashboard.putNumber("Trajectory Speeds", setSpeed);
-    SmartDashboard.putNumber("LeftDriveSpeed", drive.getDriveVelocity());
+    SmartDashboard.putNumber("LeftDriveSpeed", drive.getLeftDriveVelocity());
     SmartDashboard.putNumber("LeftDrivePosition", drive.getDrivePosition());
   }
 
@@ -141,7 +145,10 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
+    logger.logDoubles("DrivetrainLog", Timer.getFPGATimestamp(),
+    ((double) drive.getLeftDriveVelocity()));
   }
+
 
   /**
    * This function is called periodically during operator control.
@@ -166,7 +173,7 @@ public class Robot extends TimedRobot {
     //runs every 100ms
     
     if (Timer.getFPGATimestamp() - lastLoop > 0.05) {
-      logger.logDoubles("ImplementingTest0", Timer.getFPGATimestamp(), drive.getDriveVelocity());
+      logger.logDoubles("ImplementingTest0", Timer.getFPGATimestamp(), drive.getLeftDriveVelocity());
       lastLoop = Timer.getFPGATimestamp();
     }
   }

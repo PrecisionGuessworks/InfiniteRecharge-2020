@@ -7,13 +7,20 @@
 
 package frc.robot.subsystems;
 
+import edu.wpi.first.wpilibj.I2C;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+//import com.revrobotics.ColorSensorV3;
 
 public class ControlPanelSubsystem extends SubsystemBase {
   /**
    * Creates a new ControlPanelSubsystem.
    */
+  //ColorSensorV3 sensor;
+
   public ControlPanelSubsystem() {
+
+    //sensor = new ColorSensorV3(I2C.Port.kOnboard);
+    
 
   }
 
