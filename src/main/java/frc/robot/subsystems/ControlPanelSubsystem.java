@@ -15,7 +15,11 @@ public class ControlPanelSubsystem extends SubsystemBase {
   /**
    * Creates a new ControlPanelSubsystem.
    */
-  //ColorSensorV3 sensor;
+  public enum controlPanelStates {
+    POSITION_CONTROL, //Stage 2 spins until sensor reads x color
+    ROTATION_CONTROL, //Stage 1 spins between 3 and 5 times
+    OFF; //Isn't spinning
+  }
 
   public ControlPanelSubsystem() {
 

@@ -35,9 +35,15 @@ public class DriveTrainSubsystem implements Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
+public enum driveTrainStates {
+  OPEN_LOOP, //Driving without a control loop
+  PATH_FOLLOWING; //Driving with a control loop
+}
+
   TalonFX[] leftmotor;
   TalonFX[] rightmotor;
   public OI oi;
+  public static final double driverPowerReduction = 0.75;
 
   Trajectory testTraj;
 
@@ -86,13 +92,13 @@ public class DriveTrainSubsystem implements Subsystem {
     leftmotor = new TalonFX[3];
     rightmotor = new TalonFX[3];
 
-    leftmotor[0] = TalonFXFactory.createPIDTalonFX(RobotMap.DRIVETRAIN_LEFT_MASTER, false, leftkP, leftkI, leftkD, leftkF);
-    leftmotor[1] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_LEFT_FOLLOWER1, leftmotor[0]);
-    leftmotor[2] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_LEFT_FOLLOWER2, leftmotor[0]);
+    leftmotor[0] = TalonFXFactory.createPIDTalonFX(RobotMap.DRIVETRAIN_LEFT_MASTER_ID, false, leftkP, leftkI, leftkD, leftkF);
+    leftmotor[1] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_LEFT_FOLLOWER1_ID, leftmotor[0]);
+    leftmotor[2] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_LEFT_FOLLOWER2_ID, leftmotor[0]);
 
-    rightmotor[0] = TalonFXFactory.createPIDTalonFX(RobotMap.DRIVETRAIN_RIGHT_MASTER, true, rightkP, rightkI, rightkD, rightkF);
-    rightmotor[1] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_RIGHT_FOLLOWER1, rightmotor[0]);
-    rightmotor[2] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_RIGHT_FOLLOWER2, rightmotor[0]);
+    rightmotor[0] = TalonFXFactory.createPIDTalonFX(RobotMap.DRIVETRAIN_RIGHT_MASTER_ID, true, rightkP, rightkI, rightkD, rightkF);
+    rightmotor[1] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_RIGHT_FOLLOWER1_ID, rightmotor[0]);
+    rightmotor[2] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_RIGHT_FOLLOWER2_ID, rightmotor[0]);
 
 
     SmartDashboard.putNumber("Speed", 0.5);
@@ -126,7 +132,7 @@ public class DriveTrainSubsystem implements Subsystem {
    // testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(3.048, 3.657));
    testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(5, 24));
 
-
+  
 
   }
 
@@ -210,8 +216,8 @@ public static DriveTrainSubsystem getInstance(){
       rightMotorOutput /= maxMagnitude;
     }
 
-    leftmotor[0].set(ControlMode.PercentOutput, leftMotorOutput * 0.5);
-    rightmotor[0].set(ControlMode.PercentOutput, rightMotorOutput * 0.5);
+    leftmotor[0].set(ControlMode.PercentOutput, leftMotorOutput * driverPowerReduction);
+    rightmotor[0].set(ControlMode.PercentOutput, rightMotorOutput * driverPowerReduction);
   }
 
   public void setDrivePower(final double powL, final double powR){

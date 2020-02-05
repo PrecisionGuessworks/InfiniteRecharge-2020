@@ -20,9 +20,15 @@ public class ClimberSubsystem extends SubsystemBase {
    */
 
    private TalonFX climbmotor;
+  public enum climberStates{
+    CLIMBING, //Allow climber full range of motion without locking
+    HANGING, //Moves to locked and fully retracted
+    STOWED; //Keeps the climber under 45 inches and not locked
+
+  }
 
   public ClimberSubsystem() {
-    climbmotor = TalonFXFactory.createPIDTalonFX(RobotMap.CLIMB_MOTOR_ID, 0.0, 0.0, 0.0, 0.0);
+    //climbmotor = TalonFXFactory.createPIDTalonFX(RobotMap.CLIMB_MOTOR_ID, 0.0, 0.0, 0.0, 0.0);
   }
 
   public void setClimberPower(double pow){

@@ -26,14 +26,14 @@ public class TalonFXFactory {
 
     public static TalonFX createTalonFX(int id){ //Creates Talon with id
         TalonFX talon = new TalonFX(id);
-        talon.configSupplyCurrentLimit(currLim);
+        //talon.configSupplyCurrentLimit(currLim);
         return talon;
     }
 
     public static TalonFX createTalonFX(int id, boolean inverted){ //Creates Talon with id and inversion
         TalonFX talon = new TalonFX(id);
         talon.setInverted(inverted);
-        talon.configSupplyCurrentLimit(currLim);
+        //talon.configSupplyCurrentLimit(currLim);
         return talon;
     }
 
@@ -53,7 +53,7 @@ public class TalonFXFactory {
         talon.config_kI(0, kI, 30);
         talon.config_kD(0, kD, 30);
         talon.config_kF(0, kF, 30);
-        talon.configSupplyCurrentLimit(currLim);
+        //talon.configSupplyCurrentLimit(currLim);
         return talon;
         
     }
@@ -61,7 +61,7 @@ public class TalonFXFactory {
     public static TalonFX createPIDTalonFX(int id, boolean inverted, double kP, double kI, double kD, double kF){
         TalonFX talon = createPIDTalonFX(id, kP, kI, kD, kF);
         talon.setInverted(inverted);
-        talon.configSupplyCurrentLimit(currLim);
+        //talon.configSupplyCurrentLimit(currLim);
         return talon;
     }
 
