@@ -55,7 +55,7 @@ public class OI {
 
     
     JoystickButton driverA = new JoystickButton(driver, 3);
-    driverA.whenPressed(comman);
+    //driverA.whenPressed(comman);
   }
 
   public static OI getInstance(){
