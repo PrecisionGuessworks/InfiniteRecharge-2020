@@ -125,7 +125,12 @@ public class Robot extends TimedRobot {
     if (startTime == -1.0){
       startTime = Timer.getFPGATimestamp();
     }
-    double setSpeed = drive.setSpeedbyTrajectory(Timer.getFPGATimestamp() - startTime);
+    double currTime = Timer.getFPGATimestamp() - startTime;
+    
+    double setSpeed = drive.setSpeedbyTrajectory(currTime);
+
+    logger.logDoubles("DrivetrainLog", currTime, drive.setSpeedbyTrajectory(currTime), drive.getLeftDriveVelocity());
+
     SmartDashboard.putNumber("Trajectory Speeds", setSpeed);
     SmartDashboard.putNumber("LeftDriveSpeed", drive.getLeftDriveVelocity());
     SmartDashboard.putNumber("LeftDrivePosition", drive.getDrivePosition());

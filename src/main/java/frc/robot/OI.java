@@ -7,7 +7,21 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+import java.util.function.BiConsumer;
+
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.controller.RamseteController;
+import edu.wpi.first.wpilibj.drive.DifferentialDrive;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.kinematics.DifferentialDriveKinematics;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
+import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import frc.robot.subsystems.DriveTrainSubsystem;
 
 /**
  * This class is the glue that binds the controls on the physical operator
@@ -25,7 +39,23 @@ public class OI {
     driver = new Joystick(0);
     operator = new Joystick(1);
 
+    ArrayList<Pose2d> pointList = new ArrayList<>();
+    pointList.add(new Pose2d());
+    pointList.add(new Pose2d(10, 0, new Rotation2d()));
+    Trajectory testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(20, 24));
+    RamseteController ramCont = new RamseteController();
+    double trackWidth = 20.75/12.0;//feet
+    DifferentialDriveKinematics kitnematic = new DifferentialDriveKinematics(trackWidth);
+    Pose2d startPose = new Pose2d();
+    BiConsumer<Double, Double> setRamSpeeds = (targetVelL, targetVelR) -> {
+      DriveTrainSubsystem.getInstance().setDriveVelocity(targetVelL, targetVelR);
+    };
 
+    //RamseteCommand ramComm = new RamseteCommand(testTraj, startPose, ramCont, kitnematic, setRamSpeeds, DriveTrainSubsystem.getInstance());
+
+    
+    JoystickButton driverA = new JoystickButton(driver, 3);
+    driverA.whenPressed(comman);
   }
 
   public static OI getInstance(){
@@ -42,7 +72,7 @@ public class OI {
 
   public double getDriverTurn(){
     final double turn = driver.getRawAxis(4);
-    return Math.pow(turn, 3) * 0.5;// * (turn < 0 ? -1 : 1);
+    return Math.pow(turn, 3) * 0.4;// * (turn < 0 ? -1 : 1);
   }
 
   //// CREATING BUTTONS

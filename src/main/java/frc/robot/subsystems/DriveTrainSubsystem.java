@@ -67,6 +67,8 @@ public enum driveTrainStates {
   public static final double FPS_TO_CP100MS = (1./10) * 12 * (1./WHEEL_CIRCUMFERENCE) * 2048 * 7.56;
   public static final double MAX_VEL = 20; //fps 
   public static final double KV = 1/MAX_VEL;
+  public static final double MAX_ACCEL = 24; //fps
+  public static final double KA = 0*1/MAX_ACCEL;
   public static final double COUNTS_TO_FEET = (1/12.0) * WHEEL_CIRCUMFERENCE * (1/2048.0) * (1/7.56); 
   private static DriveTrainSubsystem instance;
   
@@ -120,17 +122,17 @@ public enum driveTrainStates {
     //testTraj = TrajectoryGenerator.generateTrajectory(new Pose2d(), null, new Pose2d(0, 6.096, null), new TrajectoryConfig(6.096, 7.315));
     ArrayList<Pose2d> pointList = new ArrayList<>();
     pointList.add(new Pose2d());
-    //pointList.add(new Pose2d(0, 5, new Rotation2d(Math.PI/2)));
-    //pointList.add(new Pose2d(5, 5, new Rotation2d(Math.PI)));
-    //pointList.add(new Pose2d(5, 0, new Rotation2d((3*Math.PI)/2)));
-    pointList.add(new Pose2d(0, 5, new Rotation2d(2*Math.PI)));
+    pointList.add(new Pose2d(10, 0, new Rotation2d()));
+    //pointList.add(new Pose2d(5, 0, new Rotation2d(3.14)));
+    //pointList.add(new Pose2d(0, -5, new Rotation2d()));
+    //pointList.add(new Pose2d(0, 0, new Rotation2d()));
 
 
     //pointList.add(new Pose2d(0, 3.048, new Rotation2d()));
     //pointList.add(new Pose2d(0, 6.096, new Rotation2d()));
 
-   // testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(3.048, 3.657));
-   testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(5, 24));
+   //testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(3.048, 3.657));
+   testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(20, 24));
 
   
 
@@ -149,12 +151,13 @@ public static DriveTrainSubsystem getInstance(){
   }
 
   public double setSpeedbyTrajectory(double time){
-    double velocity = testTraj.sample(time).velocityMetersPerSecond;
-    double angularvelocity = testTraj.sample(time).curvatureRadPerMeter;
-    /*if(velocity==0){//Sets Ang. Vel. to 0 when there is no movement
-      angularvelocity = 0;
-    }*/
-    setDriveVelocity(velocity + angularvelocity, velocity - angularvelocity);
+    double velocity = -testTraj.sample(time).velocityMetersPerSecond;
+    double angularVelocity = velocity * testTraj.sample(time).curvatureRadPerMeter;
+
+    double accel = -testTraj.sample(time).accelerationMetersPerSecondSq;
+    double angularAccel = accel * testTraj.sample(time).curvatureRadPerMeter;
+    
+    setDriveVelocity(velocity + angularVelocity, velocity - angularVelocity, accel + angularAccel, accel - angularAccel);
     return velocity;
   }
   
@@ -237,11 +240,15 @@ public static DriveTrainSubsystem getInstance(){
    * @param targetVelL
    * @param targetVelR
    */
-  public void setDriveVelocity(final double targetVelL, final double targetVelR){
+  public void setDriveVelocity(double targetVelL, double targetVelR){
     //TODO motor.set(ControlMode.Velocity, vel, DemandType.ArbitraryFeedForward, feedforward);
     leftmotor[0].set(ControlMode.Velocity, targetVelL * FPS_TO_CP100MS, DemandType.ArbitraryFeedForward, targetVelL * KV);
     rightmotor[0].set(ControlMode.Velocity, targetVelR * FPS_TO_CP100MS, DemandType.ArbitraryFeedForward, targetVelR * KV);
-    
+  }
+
+  public void setDriveVelocity(double targetVelL, double targetVelR, double targetAccelL, double targetAccelR){
+    leftmotor[0].set(ControlMode.Velocity, targetVelL * FPS_TO_CP100MS, DemandType.ArbitraryFeedForward, targetVelL * KV + (KA*targetAccelL));
+    rightmotor[0].set(ControlMode.Velocity, targetVelR * FPS_TO_CP100MS, DemandType.ArbitraryFeedForward, targetVelR * KV + (KA*targetAccelR));
   }
 
   public double getError(){
