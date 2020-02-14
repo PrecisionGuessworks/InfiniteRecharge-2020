@@ -72,7 +72,7 @@ public enum driveTrainStates {
   public static final double COUNTS_TO_FEET = (1/12.0) * WHEEL_CIRCUMFERENCE * (1/2048.0) * (1/7.56); 
   private static DriveTrainSubsystem instance;
   
-  
+  //beep boop
 
   private DriveTrainSubsystem(){
 
@@ -122,17 +122,17 @@ public enum driveTrainStates {
     //testTraj = TrajectoryGenerator.generateTrajectory(new Pose2d(), null, new Pose2d(0, 6.096, null), new TrajectoryConfig(6.096, 7.315));
     ArrayList<Pose2d> pointList = new ArrayList<>();
     pointList.add(new Pose2d());
-    pointList.add(new Pose2d(10, 0, new Rotation2d()));
-    //pointList.add(new Pose2d(5, 0, new Rotation2d(3.14)));
-    //pointList.add(new Pose2d(0, -5, new Rotation2d()));
     //pointList.add(new Pose2d(0, 0, new Rotation2d()));
+    //pointList.add(new Pose2d(7, 0, new Rotation2d(3.14)));
+    //pointList.add(new Pose2d(5, 0, new Rotation2d()));
+    pointList.add(new Pose2d(10, 7, new Rotation2d()));
 
 
     //pointList.add(new Pose2d(0, 3.048, new Rotation2d()));
     //pointList.add(new Pose2d(0, 6.096, new Rotation2d()));
 
    //testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(3.048, 3.657));
-   testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(20, 24));
+   testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(5, 24));
 
   
 
@@ -150,7 +150,7 @@ public static DriveTrainSubsystem getInstance(){
     return instance;
   }
 
-  public double setSpeedbyTrajectory(double time){
+  public double[] setSpeedbyTrajectory(double time){
     double velocity = -testTraj.sample(time).velocityMetersPerSecond;
     double angularVelocity = velocity * testTraj.sample(time).curvatureRadPerMeter;
 
@@ -158,7 +158,11 @@ public static DriveTrainSubsystem getInstance(){
     double angularAccel = accel * testTraj.sample(time).curvatureRadPerMeter;
     
     setDriveVelocity(velocity + angularVelocity, velocity - angularVelocity, accel + angularAccel, accel - angularAccel);
-    return velocity;
+    
+    double[] velocities = new double[2];
+    velocities[0] = velocity + angularVelocity;
+    velocities[1] = velocity - angularVelocity;
+    return velocities;
   }
   
   public void setDrivePowerWithCurvature(double xSpeed, double zRotation, boolean isQuickTurn){

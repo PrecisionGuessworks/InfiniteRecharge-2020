@@ -24,7 +24,7 @@ public class Logger {
 
         public Buffer(String name) {
             this.name = name;
-            filename = "log" + "_" + name + "_" + dtf.format(now) + ".log";
+            filename = "log" + "_" + name + "_" + dtf.format(now) + ".csv";
         }
 
         private boolean add(Object obj) {

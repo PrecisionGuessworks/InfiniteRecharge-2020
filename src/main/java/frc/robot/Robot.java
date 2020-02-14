@@ -29,7 +29,7 @@ public class Robot extends TimedRobot {
   public static DriveTrainSubsystem drive = DriveTrainSubsystem.getInstance();
 
   public static final double QTURN_THRESHOLD = 0.1;
-  public  static Logger logger;
+  public static Logger logger;
   double startTime = -1.0;
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
@@ -74,7 +74,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     startTime = -1.0;
 
-    logger.flush("ImplementingTest0");
+    logger.flush("DrivetrainLog");
     
   }
 
@@ -127,11 +127,11 @@ public class Robot extends TimedRobot {
     }
     double currTime = Timer.getFPGATimestamp() - startTime;
     
-    double setSpeed = drive.setSpeedbyTrajectory(currTime);
+    double[] setSpeed = drive.setSpeedbyTrajectory(currTime);
 
-    logger.logDoubles("DrivetrainLog", currTime, drive.setSpeedbyTrajectory(currTime), drive.getLeftDriveVelocity());
+    logger.logDoubles("DrivetrainLog", currTime, setSpeed[0], setSpeed[1], drive.getLeftDriveVelocity(), drive.getRightDriveVelocity());
 
-    SmartDashboard.putNumber("Trajectory Speeds", setSpeed);
+    //SmartDashboard.putNumber("Trajectory Speeds", setSpeed);
     SmartDashboard.putNumber("LeftDriveSpeed", drive.getLeftDriveVelocity());
     SmartDashboard.putNumber("LeftDrivePosition", drive.getDrivePosition());
   }
@@ -142,7 +142,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    logger.createLogStream("ImplementingTest0");
+    //logger.createLogStream("ImplementingTest0");
     if (startTime == -1.0){
       startTime = Timer.getFPGATimestamp();
     }
@@ -150,8 +150,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    logger.logDoubles("DrivetrainLog", Timer.getFPGATimestamp(),
-    ((double) drive.getLeftDriveVelocity()));
+    logger.logDoubles("DrivetrainLog", Timer.getFPGATimestamp(), ((double) drive.getLeftDriveVelocity()));
   }
 
 
