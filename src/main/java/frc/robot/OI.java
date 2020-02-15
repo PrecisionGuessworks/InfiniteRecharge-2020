@@ -38,7 +38,7 @@ public class OI {
   private OI(){
     driver = new Joystick(0);
     operator = new Joystick(1);
-
+/*
     ArrayList<Pose2d> pointList = new ArrayList<>();
     pointList.add(new Pose2d());
     pointList.add(new Pose2d(10, 0, new Rotation2d()));
@@ -54,7 +54,7 @@ public class OI {
     //RamseteCommand ramComm = new RamseteCommand(testTraj, startPose, ramCont, kitnematic, setRamSpeeds, DriveTrainSubsystem.getInstance());
 
     
-    JoystickButton driverA = new JoystickButton(driver, 3);
+    JoystickButton driverA = new JoystickButton(driver, 3);*/
     //driverA.whenPressed(comman);
   }
 

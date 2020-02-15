@@ -94,8 +94,7 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     startTime = -1.0;
 
-    //logger.flush("ImplementingTest0");
-    logger.flush("Drivetrain Log");
+    logger.flush("DrivetrainLog");
     
   }
 
@@ -149,9 +148,15 @@ public class Robot extends TimedRobot {
     double currTime = Timer.getFPGATimestamp() - startTime;
     
     //double setSpeed = drive.setSpeedbyTrajectory(testTraj0, currTime);
+    /*
     drive.setSpeedbyTrajectory(testTraj0, currTime);
 
     logger.logDoubles("DrivetrainLog", currTime, drive.setSpeedbyTrajectory(testTraj0, currTime), drive.getLeftDriveVelocity(), drive.getRightDriveVelocity());
+    */
+
+    double[] setSpeed = new double[2];// = drive.setSpeedbyTrajectory(currTime);
+
+    logger.logDoubles("DrivetrainLog", currTime, setSpeed[0], setSpeed[1], drive.getLeftDriveVelocity(), drive.getRightDriveVelocity());
 
     //SmartDashboard.putNumber("Trajectory Speeds", setSpeed);
     SmartDashboard.putNumber("LeftDriveSpeed", drive.getLeftDriveVelocity());
@@ -164,7 +169,7 @@ public class Robot extends TimedRobot {
     // teleop starts running. If you want the autonomous to
     // continue until interrupted by another command, remove
     // this line or comment it out.
-    logger.createLogStream("ImplementingTest0");
+    //logger.createLogStream("ImplementingTest0");
     if (startTime == -1.0){
       startTime = Timer.getFPGATimestamp();
     }
@@ -172,8 +177,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    logger.logDoubles("DrivetrainLog", Timer.getFPGATimestamp(),
-    ((double) drive.getLeftDriveVelocity()));
+    logger.logDoubles("DrivetrainLog", Timer.getFPGATimestamp(), ((double) drive.getLeftDriveVelocity()));
   }
 
 
