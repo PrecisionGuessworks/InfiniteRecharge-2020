@@ -7,12 +7,19 @@
 
 package frc.robot;
 
+import java.util.ArrayList;
+
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.command.Scheduler;
+import edu.wpi.first.wpilibj.geometry.Pose2d;
+import edu.wpi.first.wpilibj.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj.trajectory.Trajectory;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
+import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.util.Logger;
 
@@ -29,12 +36,14 @@ public class Robot extends TimedRobot {
   public static DriveTrainSubsystem drive = DriveTrainSubsystem.getInstance();
 
   public static final double QTURN_THRESHOLD = 0.1;
-  public  static Logger logger;
+  public static Logger logger;
   double startTime = -1.0;
   Command m_autonomousCommand;
   SendableChooser<Command> m_chooser = new SendableChooser<>();
 
   double lastLoop = 0;
+
+  Trajectory testTraj0;
 
 
 
@@ -51,6 +60,17 @@ public class Robot extends TimedRobot {
     logger = new Logger();
 
     logger.createLogStream("DrivetrainLog");
+
+    SmartDashboard.putNumber("targetVelL", 0);
+    SmartDashboard.putNumber("targetVelR", 0);
+
+
+    ArrayList<Pose2d> pointList0 = new ArrayList<>();
+
+    pointList0.add(new Pose2d(2.667, 0, new Rotation2d()));
+    pointList0.add(new Pose2d(15, 10, new Rotation2d()));
+    testTraj0 = TrajectoryGenerator.generateTrajectory(pointList0, new TrajectoryConfig(19, 23).setReversed(false));
+
   }
 
   /**
@@ -74,7 +94,8 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     startTime = -1.0;
 
-    logger.flush("ImplementingTest0");
+    //logger.flush("ImplementingTest0");
+    logger.flush("Drivetrain Log");
     
   }
 
@@ -127,11 +148,12 @@ public class Robot extends TimedRobot {
     }
     double currTime = Timer.getFPGATimestamp() - startTime;
     
-    double setSpeed = drive.setSpeedbyTrajectory(currTime);
+    //double setSpeed = drive.setSpeedbyTrajectory(testTraj0, currTime);
+    drive.setSpeedbyTrajectory(testTraj0, currTime);
 
-    logger.logDoubles("DrivetrainLog", currTime, drive.setSpeedbyTrajectory(currTime), drive.getLeftDriveVelocity());
+    logger.logDoubles("DrivetrainLog", currTime, drive.setSpeedbyTrajectory(testTraj0, currTime), drive.getLeftDriveVelocity(), drive.getRightDriveVelocity());
 
-    SmartDashboard.putNumber("Trajectory Speeds", setSpeed);
+    //SmartDashboard.putNumber("Trajectory Speeds", setSpeed);
     SmartDashboard.putNumber("LeftDriveSpeed", drive.getLeftDriveVelocity());
     SmartDashboard.putNumber("LeftDrivePosition", drive.getDrivePosition());
   }
@@ -173,10 +195,11 @@ public class Robot extends TimedRobot {
     
     drive.setDrivePowerWithCurvature(throttle, turn, quickturn);
 
-    //SmartDashboard.putNumber("getVelocity", drive.getDriveVelocity());
+    if(m_oi.driver.getRawButton(1)){
+      drive.setDriveVelocity(SmartDashboard.getNumber("targetVelL", 0), SmartDashboard.getNumber("targetVelR", 0));
+    }
 
     //runs every 100ms
-    
     if (Timer.getFPGATimestamp() - lastLoop > 0.05) {
       logger.logDoubles("ImplementingTest0", Timer.getFPGATimestamp(), drive.getLeftDriveVelocity());
       lastLoop = Timer.getFPGATimestamp();

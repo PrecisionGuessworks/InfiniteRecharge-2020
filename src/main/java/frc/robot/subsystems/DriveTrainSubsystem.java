@@ -35,17 +35,17 @@ public class DriveTrainSubsystem implements Subsystem {
   // Put methods for controlling this subsystem
   // here. Call these from Commands.
 
-public enum driveTrainStates {
-  OPEN_LOOP, //Driving without a control loop
-  PATH_FOLLOWING; //Driving with a control loop
-}
+  public enum driveTrainStates {
+    OPEN_LOOP, //Driving without a control loop
+    PATH_FOLLOWING; //Driving with a control loop
+  }
 
   TalonFX[] leftmotor;
   TalonFX[] rightmotor;
   public OI oi;
   public static final double driverPowerReduction = 0.75;
 
-  Trajectory testTraj;
+  Trajectory traject;
 
   DifferentialDrive diffDrive;
 
@@ -66,9 +66,9 @@ public enum driveTrainStates {
 
   public static final double FPS_TO_CP100MS = (1./10) * 12 * (1./WHEEL_CIRCUMFERENCE) * 2048 * 7.56;
   public static final double MAX_VEL = 20; //fps 
-  public static final double KV = 1/MAX_VEL;
+  public static final double KV = .005 + 1/MAX_VEL;
   public static final double MAX_ACCEL = 24; //fps
-  public static final double KA = 0*1/MAX_ACCEL;
+  public static final double KA = 0.002;
   public static final double COUNTS_TO_FEET = (1/12.0) * WHEEL_CIRCUMFERENCE * (1/2048.0) * (1/7.56); 
   private static DriveTrainSubsystem instance;
   
@@ -116,26 +116,6 @@ public enum driveTrainStates {
     SmartDashboard.putNumber("rightmotorkI", rightkI);
     SmartDashboard.putNumber("rightmotorkD", rightkD);
     SmartDashboard.putNumber("rightmotorkF",rightkF);
-
-    
-
-    //testTraj = TrajectoryGenerator.generateTrajectory(new Pose2d(), null, new Pose2d(0, 6.096, null), new TrajectoryConfig(6.096, 7.315));
-    ArrayList<Pose2d> pointList = new ArrayList<>();
-    pointList.add(new Pose2d());
-    pointList.add(new Pose2d(10, 0, new Rotation2d()));
-    //pointList.add(new Pose2d(5, 0, new Rotation2d(3.14)));
-    //pointList.add(new Pose2d(0, -5, new Rotation2d()));
-    //pointList.add(new Pose2d(0, 0, new Rotation2d()));
-
-
-    //pointList.add(new Pose2d(0, 3.048, new Rotation2d()));
-    //pointList.add(new Pose2d(0, 6.096, new Rotation2d()));
-
-   //testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(3.048, 3.657));
-   testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(20, 24));
-
-  
-
   }
 
   
@@ -143,19 +123,19 @@ public enum driveTrainStates {
 
   
 
-public static DriveTrainSubsystem getInstance(){
+  public static DriveTrainSubsystem getInstance(){
     if(instance==null){
       instance = new DriveTrainSubsystem();
     }
     return instance;
   }
 
-  public double setSpeedbyTrajectory(double time){
-    double velocity = -testTraj.sample(time).velocityMetersPerSecond;
-    double angularVelocity = velocity * testTraj.sample(time).curvatureRadPerMeter;
+  public double setSpeedbyTrajectory(Trajectory traject, double time){
+    double velocity = traject.sample(time).velocityMetersPerSecond;
+    double angularVelocity = velocity * traject.sample(time).curvatureRadPerMeter;
 
-    double accel = -testTraj.sample(time).accelerationMetersPerSecondSq;
-    double angularAccel = accel * testTraj.sample(time).curvatureRadPerMeter;
+    double accel = traject.sample(time).accelerationMetersPerSecondSq;
+    double angularAccel = accel * traject.sample(time).curvatureRadPerMeter;
     
     setDriveVelocity(velocity + angularVelocity, velocity - angularVelocity, accel + angularAccel, accel - angularAccel);
     return velocity;
@@ -192,8 +172,8 @@ public static DriveTrainSubsystem getInstance(){
     }
 
     //If it's turning the wrong direction on joysticks switch these signs
-    double leftMotorOutput = xSpeed + angularPower;
-    double rightMotorOutput = xSpeed - angularPower;
+    double leftMotorOutput = xSpeed - angularPower;
+    double rightMotorOutput = xSpeed + angularPower;
 
     // If rotation is overpowered, reduce both outputs to within acceptable range
     if (overPower) {
@@ -219,8 +199,8 @@ public static DriveTrainSubsystem getInstance(){
       rightMotorOutput /= maxMagnitude;
     }
 
-    leftmotor[0].set(ControlMode.PercentOutput, leftMotorOutput * driverPowerReduction);
-    rightmotor[0].set(ControlMode.PercentOutput, rightMotorOutput * driverPowerReduction);
+    leftmotor[0].set(ControlMode.PercentOutput, -leftMotorOutput * driverPowerReduction);
+    rightmotor[0].set(ControlMode.PercentOutput, -rightMotorOutput * driverPowerReduction);
   }
 
   public void setDrivePower(final double powL, final double powR){
@@ -241,7 +221,6 @@ public static DriveTrainSubsystem getInstance(){
    * @param targetVelR
    */
   public void setDriveVelocity(double targetVelL, double targetVelR){
-    //TODO motor.set(ControlMode.Velocity, vel, DemandType.ArbitraryFeedForward, feedforward);
     leftmotor[0].set(ControlMode.Velocity, targetVelL * FPS_TO_CP100MS, DemandType.ArbitraryFeedForward, targetVelL * KV);
     rightmotor[0].set(ControlMode.Velocity, targetVelR * FPS_TO_CP100MS, DemandType.ArbitraryFeedForward, targetVelR * KV);
   }
