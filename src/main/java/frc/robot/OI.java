@@ -11,7 +11,9 @@ import java.util.ArrayList;
 import java.util.function.BiConsumer;
 
 import edu.wpi.first.wpilibj.Joystick;
+import edu.wpi.first.wpilibj.XboxController.Button;
 import edu.wpi.first.wpilibj.buttons.JoystickButton;
+import edu.wpi.first.wpilibj.command.Command;
 import edu.wpi.first.wpilibj.controller.RamseteController;
 import edu.wpi.first.wpilibj.drive.DifferentialDrive;
 import edu.wpi.first.wpilibj.geometry.Pose2d;
@@ -21,6 +23,7 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import frc.robot.commands.shootercommands.QuickShotCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 
 /**
@@ -38,6 +41,8 @@ public class OI {
   private OI(){
     driver = new Joystick(0);
     operator = new Joystick(1);
+
+    //JoystickButton b = new JoystickButton(driver, 4);
 /*
     ArrayList<Pose2d> pointList = new ArrayList<>();
     pointList.add(new Pose2d());

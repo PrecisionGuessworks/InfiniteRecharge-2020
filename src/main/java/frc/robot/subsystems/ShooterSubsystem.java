@@ -63,44 +63,7 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public void setState(shooterStates newState){
     currentState = newState;
-  }
-
-  public void setShooterPower(double upperPower, double lowerPower){
-    upperFlywheel.set(ControlMode.PercentOutput, upperPower);
-    lowerFlywheel.set(ControlMode.PercentOutput, lowerPower);
-  }
-
-  public void setShooterSpeed(double upperSpeed, double lowerSpeed){
-    double upperSpeedConverted = upperSpeed * SHOOTER_RPM_TO_CP100MS;
-    double lowerSpeedConverted = lowerSpeed * SHOOTER_RPM_TO_CP100MS;    
-    upperFlywheel.set(ControlMode.Velocity, upperSpeedConverted);
-    lowerFlywheel.set(ControlMode.Velocity, lowerSpeedConverted);
-  }
-
-  public void setTurretPosition(double position){
-    turretMotor.set(ControlMode.Position, position);
-  }
-
-  public boolean rotateToTarget(double limelightX, double tolerance) {
-    //TODO: Finish this method
-    return false;
-  }
-
-  @Override
-  public void periodic() {
-    // This method will be called once per scheduler run
-  NetworkTableEntry tx = limelightTable.getEntry("tx");
-  NetworkTableEntry ty = limelightTable.getEntry("ty");
-  NetworkTableEntry ta = limelightTable.getEntry("ta");
-  NetworkTableEntry tv = limelightTable.getEntry("tv");
-
-  double limelightX = tx.getDouble(0.0);
-  double limelightY = ty.getDouble(0.0);
-  double limelightArea = ta.getDouble(0.0);
-  double limelightHasTarget = tv.getDouble(0);
-
-
-      //TODO: Do turret stuff
+    //TODO: Do turret stuff
     switch (currentState) {
       case STATIONARY:
         setShooterPower(0, 0);
@@ -135,6 +98,45 @@ public class ShooterSubsystem extends SubsystemBase {
       //TODO: Adjust angle based on limelight
         break;
     }
+  }
+
+  public void setShooterPower(double upperPower, double lowerPower){
+    upperFlywheel.set(ControlMode.PercentOutput, upperPower);
+    lowerFlywheel.set(ControlMode.PercentOutput, lowerPower);
+  }
+
+  public void setShooterSpeed(double upperSpeed, double lowerSpeed){
+    double upperSpeedConverted = upperSpeed * SHOOTER_RPM_TO_CP100MS;
+    double lowerSpeedConverted = lowerSpeed * SHOOTER_RPM_TO_CP100MS;    
+    upperFlywheel.set(ControlMode.Velocity, upperSpeedConverted);
+    lowerFlywheel.set(ControlMode.Velocity, lowerSpeedConverted);
+  }
+
+  public void setTurretPosition(double position){
+    turretMotor.set(ControlMode.Position, position);
+  }
+
+  public boolean rotateToTarget(double limelightX, double tolerance) {
+    //TODO: Finish this method
+    return false;
+  }
+
+  
+
+
+
+  @Override
+  public void periodic() {
+    // This method will be called once per scheduler run
+  NetworkTableEntry tx = limelightTable.getEntry("tx");
+  NetworkTableEntry ty = limelightTable.getEntry("ty");
+  NetworkTableEntry ta = limelightTable.getEntry("ta");
+  NetworkTableEntry tv = limelightTable.getEntry("tv");
+
+  double limelightX = tx.getDouble(0.0);
+  double limelightY = ty.getDouble(0.0);
+  double limelightArea = ta.getDouble(0.0);
+  double limelightHasTarget = tv.getDouble(0);
 
   }
 }
