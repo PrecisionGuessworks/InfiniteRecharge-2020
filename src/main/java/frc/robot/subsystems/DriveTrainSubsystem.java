@@ -66,7 +66,7 @@ public enum driveTrainStates {
 
   public static final double FPS_TO_CP100MS = (1./10) * 12 * (1./WHEEL_CIRCUMFERENCE) * 2048 * 7.56;
   public static final double MAX_VEL = 20; //fps 
-  public static final double KV = 1/MAX_VEL;
+  public static final double KV =  1/MAX_VEL;
   public static final double MAX_ACCEL = 24; //fps
   public static final double KA = 0*1/MAX_ACCEL;
   public static final double COUNTS_TO_FEET = (1/12.0) * WHEEL_CIRCUMFERENCE * (1/2048.0) * (1/7.56); 
