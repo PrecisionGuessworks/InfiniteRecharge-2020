@@ -11,6 +11,7 @@ import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
 
 import edu.wpi.first.wpilibj.Talon;
+import edu.wpi.first.wpilibj.Ultrasonic;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 
@@ -25,11 +26,15 @@ public class IntakeSubsystem extends SubsystemBase {
   private TalonSRX hopperAggitator;
   private Talon liftMotor;
 
+  private intakeStates currentState;
+
   public enum intakeStates {
     STAGING, //Feeding the balls until sensor sees balls
     FEEDING, //Loading balls into shooter
     OFF; //No motors are spinning
   }
+
+  public static IntakeSubsystem instance;
 
   public IntakeSubsystem() {
     intakeRoller = new Talon(RobotMap.INTAKE_INTAKE_ROLLER_ID);
@@ -37,6 +42,13 @@ public class IntakeSubsystem extends SubsystemBase {
     hopperIndexer = new Talon(RobotMap.INTAKE_HOPPER_INDEXER_ID);
     hopperAggitator = new TalonSRX(RobotMap.INTAKE_HOPPER_AGGITATOR_ID);
     liftMotor = new Talon(RobotMap.INTAKE_LIFT_MOTOR_ID);
+  }
+
+  public static IntakeSubsystem getInstance(){
+    if(instance == null) {
+      instance = new IntakeSubsystem();
+    }
+    return instance;
   }
 
   public void setIntakePower(double power){
@@ -58,9 +70,28 @@ public class IntakeSubsystem extends SubsystemBase {
   public void setLiftMotorPower(double power){
     liftMotor.set(power);
   }
+//TODO: LIMELIGHT THINGS
+  public void setState(intakeStates newState){
+    currentState = newState;
+    //TODO: Do turret stuff
+    switch (currentState) {
+      case OFF:
+        setIntakePower(0);
+        break;
+
+        case STAGING:
+        setIntakePower(0.5);
+        //TODO: ULTRASONIC STUFF
+        break;
+
+        case FEEDING:
+        setIntakePower(0.5);
+      }
+  }
 
   @Override
   public void periodic() {
     // This method will be called once per scheduler run
   }
+
 }
