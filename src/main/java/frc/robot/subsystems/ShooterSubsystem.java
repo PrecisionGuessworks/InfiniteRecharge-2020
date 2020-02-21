@@ -120,6 +120,9 @@ public class ShooterSubsystem extends SubsystemBase {
     //TODO: Finish this method
     return false;
   }
+  public void setTurretPower(double turretPower){
+    turretMotor.set(ControlMode.PercentOutput, turretPower);
+  }
 
   
 

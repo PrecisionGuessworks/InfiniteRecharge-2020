@@ -21,7 +21,14 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import edu.wpi.first.wpilibj2.command.RamseteCommand;
+import frc.robot.commands.intakecommands.FeedingCommand;
+import frc.robot.commands.intakecommands.StagingCommand;
+import frc.robot.commands.shootercommands.ContinualFiringCommand;
+import frc.robot.commands.shootercommands.LongShotCommand;
+import frc.robot.commands.shootercommands.PrecisionShotCommand;
 import frc.robot.commands.shootercommands.QuickShotCommand;
+import frc.robot.commands.shootercommands.RotateTurretLeftCommand;
+import frc.robot.commands.shootercommands.RotateTurretRightCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj2.command.button.Button;
 
@@ -36,10 +43,77 @@ public class OI {
 
   private static OI instance;
 
-
+  Button b;
+  Button a;
+  Button x;
+  Button y;
+  Button lB;
+  Button rB;
+  Button back;
+  Button start;
   private OI(){
     driver = new Joystick(0);
     operator = new Joystick(1);
+
+    b = new Button() {
+      @Override
+      public boolean get() {
+        return driver.getRawButton(2);
+      }
+    };
+    b.whileHeld(new QuickShotCommand());
+    a = new Button() {
+      @Override
+      public boolean get() {
+        return driver.getRawButton(1);
+      }
+    };
+    a.whileHeld(new FeedingCommand());
+    x = new Button() {
+      @Override
+      public boolean get(){
+        return driver.getRawButton(3);
+      }
+    };
+    x.whileHeld(new LongShotCommand());
+    y = new Button() {
+      @Override
+      public boolean get(){
+        return driver.getRawButton(4);
+      }
+    };
+    y.whileHeld(new PrecisionShotCommand());
+    lB = new Button(){
+      @Override
+      public boolean get(){
+        return driver.getRawButton(5);
+      }
+    };
+    lB.whileHeld(new StagingCommand());
+    rB = new Button(){
+      @Override
+      public boolean get(){
+        return driver.getRawButton(6);
+      }
+    };
+    rB.whileHeld(new ContinualFiringCommand());
+    back = new Button() {
+      @Override
+      public boolean get(){
+        return driver.getRawButton(7);
+      }
+    };
+    back.whileHeld(new RotateTurretLeftCommand());
+    start = new Button(){
+      @Override
+      public boolean get(){
+        return driver.getRawButton(8);
+      }
+    };
+    start.whileHeld(new RotateTurretRightCommand());
+
+
+
 
 /*
     ArrayList<Pose2d> pointList = new ArrayList<>();
