@@ -66,13 +66,9 @@ public class DriveTrainSubsystem implements Subsystem {
 
   public static final double FPS_TO_CP100MS = (1./10) * 12 * (1./WHEEL_CIRCUMFERENCE) * 2048 * 7.56;
   public static final double MAX_VEL = 20; //fps 
-<<<<<<< HEAD
-  public static final double KV =  1/MAX_VEL;
-=======
   public static final double KV = .005 + 1/MAX_VEL;
->>>>>>> c87e0bd6dae3d004bf84fcc07727a1051c6ab2d4
   public static final double MAX_ACCEL = 24; //fps
-  public static final double KA = 0.002;
+  public static final double KA = 0.0015;
   public static final double COUNTS_TO_FEET = (1/12.0) * WHEEL_CIRCUMFERENCE * (1/2048.0) * (1/7.56); 
   private static DriveTrainSubsystem instance;
   

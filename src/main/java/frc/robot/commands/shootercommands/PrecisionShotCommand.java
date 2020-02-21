@@ -22,7 +22,7 @@ public class PrecisionShotCommand extends CommandBase {
   @Override
   public void initialize() {
       shooter.setState(shooterStates.PRECISION_SHOT);
-      limelight.setlimelightconfig();
+      //limelight.setlimelightconfig();
   }
 
   // Called every time the scheduler runs while the command is scheduled.

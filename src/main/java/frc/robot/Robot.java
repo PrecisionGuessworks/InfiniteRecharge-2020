@@ -148,9 +148,9 @@ public class Robot extends TimedRobot {
     double currTime = Timer.getFPGATimestamp() - startTime;
     
     //double setSpeed = drive.setSpeedbyTrajectory(testTraj0, currTime);
-    /*
+    
     drive.setSpeedbyTrajectory(testTraj0, currTime);
-
+    /*
     logger.logDoubles("DrivetrainLog", currTime, drive.setSpeedbyTrajectory(testTraj0, currTime), drive.getLeftDriveVelocity(), drive.getRightDriveVelocity());
     */
 
@@ -203,11 +203,12 @@ public class Robot extends TimedRobot {
       drive.setDriveVelocity(SmartDashboard.getNumber("targetVelL", 0), SmartDashboard.getNumber("targetVelR", 0));
     }
 
+    /*
     //runs every 100ms
     if (Timer.getFPGATimestamp() - lastLoop > 0.05) {
       logger.logDoubles("ImplementingTest0", Timer.getFPGATimestamp(), drive.getLeftDriveVelocity());
       lastLoop = Timer.getFPGATimestamp();
-    }
+    }*/
   }
 
   /**
