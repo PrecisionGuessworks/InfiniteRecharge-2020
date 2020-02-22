@@ -16,15 +16,15 @@ public class Constants {
     public static PIDConstants SHOOTER_UPPER_FLYWHEEL_CONSTANTS = new PIDConstants(0, 0, 0, 0);
     public static PIDConstants SHOOTER_TURRET_CONSTANTS = new PIDConstants(0, 0, 0, 0);
 
-    public static PIDConstants DRIVETRAIN_LEFT = new PIDConstants(0, 0, 0, 0);
-    public static PIDConstants DRIVETRAIN_RIGHT = new PIDConstants(0, 0, 0, 0);
+    public static PIDConstants DRIVETRAIN_LEFT = new PIDConstants(0.15, 0.0, 0.05, 0);
+    public static PIDConstants DRIVETRAIN_RIGHT = new PIDConstants(0.15, 0.0, 0.05, 0);
 
     public static double SHOOTER_LONG_UPPER_WHEEL_SPEED = 3600;
     public static double SHOOTER_LONG_LOWER_WHEEL_SPEED = 3600;
     public static double SHOOTER_SHORT_UPPER_WHEEL_SPEED = 2700;
     public static double SHOOTER_SHORT_LOWER_WHEEL_SPEED = 2700;
 
-    static class PIDConstants {
+    public static class PIDConstants {
 
         public PIDConstants(double p, double i, double d, double f) {
             this.p = p;
@@ -32,9 +32,9 @@ public class Constants {
             this.d = d;
             this.f = f;
         }
-        double p;
-        double i;
-        double d;
-        double f;
+        public double p;
+        public double i;
+        public double d;
+        public double f;
     }
 }

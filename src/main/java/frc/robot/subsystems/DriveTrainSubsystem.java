@@ -11,6 +11,7 @@ import java.util.ArrayList;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.DemandType;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 
 import edu.wpi.first.wpilibj2.command.Subsystem;
@@ -25,6 +26,7 @@ import edu.wpi.first.wpilibj.geometry.Rotation2d;
 //import frc.robot.commands.ArcadeDrive;
 
 import frc.robot.lib.TalonFXFactory;
+import frc.robot.util.Constants;
 import frc.robot.OI;
 import frc.robot.RobotMap;
 
@@ -66,9 +68,9 @@ public class DriveTrainSubsystem implements Subsystem {
 
   public static final double FPS_TO_CP100MS = (1./10) * 12 * (1./WHEEL_CIRCUMFERENCE) * 2048 * 7.56;
   public static final double MAX_VEL = 20; //fps 
-  public static final double KV = .005 + 1/MAX_VEL;
+  public static final double KV = .002 + 1/MAX_VEL;
   public static final double MAX_ACCEL = 24; //fps
-  public static final double KA = 0.002;
+  public static final double KA = 0.0025;
   public static final double COUNTS_TO_FEET = (1/12.0) * WHEEL_CIRCUMFERENCE * (1/2048.0) * (1/7.56); 
   private static DriveTrainSubsystem instance;
   
@@ -79,15 +81,15 @@ public class DriveTrainSubsystem implements Subsystem {
     oi = OI.getInstance();
     
     //TODO: actually do something with our PIDF values
-    double leftkP = 0.0;
-    double leftkI = 0.0;
-    double leftkD = 0.0;
-    double leftkF = 0.0;
+    double leftkP = Constants.DRIVETRAIN_LEFT.p;
+    double leftkI = Constants.DRIVETRAIN_LEFT.i;
+    double leftkD = Constants.DRIVETRAIN_LEFT.d;
+    double leftkF = Constants.DRIVETRAIN_LEFT.f;
     
-    double rightkP = 0.0;
-    double rightkI = 0.0; 
-    double rightkD = 0.0; 
-    double rightkF = 0.0;
+    double rightkP = Constants.DRIVETRAIN_RIGHT.p;
+    double rightkI = Constants.DRIVETRAIN_RIGHT.i; 
+    double rightkD = Constants.DRIVETRAIN_RIGHT.d; 
+    double rightkF = Constants.DRIVETRAIN_RIGHT.f;
 
     
 
@@ -117,25 +119,6 @@ public class DriveTrainSubsystem implements Subsystem {
     SmartDashboard.putNumber("rightmotorkD", rightkD);
     SmartDashboard.putNumber("rightmotorkF",rightkF);
 
-    
-
-    //testTraj = TrajectoryGenerator.generateTrajectory(new Pose2d(), null, new Pose2d(0, 6.096, null), new TrajectoryConfig(6.096, 7.315));
-    ArrayList<Pose2d> pointList = new ArrayList<>();
-    pointList.add(new Pose2d());
-    //pointList.add(new Pose2d(0, 0, new Rotation2d()));
-    //pointList.add(new Pose2d(7, 0, new Rotation2d(3.14)));
-    //pointList.add(new Pose2d(5, 0, new Rotation2d()));
-    pointList.add(new Pose2d(10, 7, new Rotation2d()));
-
-
-    //pointList.add(new Pose2d(0, 3.048, new Rotation2d()));
-    //pointList.add(new Pose2d(0, 6.096, new Rotation2d()));
-
-   //testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(3.048, 3.657));
-   //testTraj = TrajectoryGenerator.generateTrajectory(pointList, new TrajectoryConfig(5, 24));
-
-  
-
   }
 
   
@@ -148,6 +131,24 @@ public class DriveTrainSubsystem implements Subsystem {
       instance = new DriveTrainSubsystem();
     }
     return instance;
+  }
+
+  public void setCoastMode(){
+    leftmotor[0].setNeutralMode(NeutralMode.Coast);
+    leftmotor[1].setNeutralMode(NeutralMode.Coast);
+    leftmotor[2].setNeutralMode(NeutralMode.Coast);
+    rightmotor[0].setNeutralMode(NeutralMode.Coast);
+    rightmotor[1].setNeutralMode(NeutralMode.Coast);
+    rightmotor[2].setNeutralMode(NeutralMode.Coast);
+  }
+
+  public void setBrakeMode(){
+    leftmotor[0].setNeutralMode(NeutralMode.Brake);
+    leftmotor[1].setNeutralMode(NeutralMode.Brake);
+    leftmotor[2].setNeutralMode(NeutralMode.Brake);
+    rightmotor[0].setNeutralMode(NeutralMode.Brake);
+    rightmotor[1].setNeutralMode(NeutralMode.Brake);
+    rightmotor[2].setNeutralMode(NeutralMode.Brake);
   }
 
   public double[] setSpeedbyTrajectory(Trajectory traject, double time){

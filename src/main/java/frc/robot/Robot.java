@@ -44,6 +44,7 @@ public class Robot extends TimedRobot {
   double lastLoop = 0;
 
   Trajectory testTraj0;
+  Trajectory testTraj1;
 
 
 
@@ -59,6 +60,8 @@ public class Robot extends TimedRobot {
     SmartDashboard.putData("Auto mode", m_chooser);
     logger = new Logger();
 
+    
+
     logger.createLogStream("DrivetrainLog");
 
     SmartDashboard.putNumber("targetVelL", 0);
@@ -67,10 +70,17 @@ public class Robot extends TimedRobot {
 
     ArrayList<Pose2d> pointList0 = new ArrayList<>();
 
-    pointList0.add(new Pose2d(2.667, 0, new Rotation2d()));
-    pointList0.add(new Pose2d(15, 10, new Rotation2d()));
-    testTraj0 = TrajectoryGenerator.generateTrajectory(pointList0, new TrajectoryConfig(19, 23).setReversed(false));
+    //pointList0.add(new Pose2d(2.667, 0, new Rotation2d()));
+    //pointList0.add(new Pose2d(15, 10, new Rotation2d(0)));
+    pointList0.add(FieldPositions.START);
+    pointList0.add(FieldPositions.TRENCH_CELL_3);
+    testTraj0 = TrajectoryGenerator.generateTrajectory(pointList0, new TrajectoryConfig(10, 23).setReversed(false));
 
+    ArrayList<Pose2d> pointList1 = new ArrayList<>();
+
+    pointList1.add(FieldPositions.TRENCH_CELL_3);
+    pointList1.add(FieldPositions.OPPSHOT);
+    testTraj1 = TrajectoryGenerator.generateTrajectory(pointList1, new TrajectoryConfig(10, 23).setReversed(true));
   }
 
   /**
@@ -95,7 +105,7 @@ public class Robot extends TimedRobot {
     startTime = -1.0;
 
     logger.flush("DrivetrainLog");
-    
+    drive.setCoastMode();
   }
 
   @Override
@@ -132,7 +142,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.start();
     }
     drive.zeroEncoders();
-
+    drive.setBrakeMode();
   }
 
   /**
@@ -146,15 +156,13 @@ public class Robot extends TimedRobot {
       startTime = Timer.getFPGATimestamp();
     }
     double currTime = Timer.getFPGATimestamp() - startTime;
-    
-    //double setSpeed = drive.setSpeedbyTrajectory(testTraj0, currTime);
-    /*
-    drive.setSpeedbyTrajectory(testTraj0, currTime);
+    double[] setSpeed;
 
-    logger.logDoubles("DrivetrainLog", currTime, drive.setSpeedbyTrajectory(testTraj0, currTime), drive.getLeftDriveVelocity(), drive.getRightDriveVelocity());
-    */
-
-    double[] setSpeed = new double[2];// = drive.setSpeedbyTrajectory(currTime);
+    if (currTime < testTraj0.getTotalTimeSeconds()) {
+      setSpeed = drive.setSpeedbyTrajectory(testTraj0, currTime);
+    } else {
+      setSpeed = drive.setSpeedbyTrajectory(testTraj1, currTime - testTraj0.getTotalTimeSeconds());
+    }
 
     logger.logDoubles("DrivetrainLog", currTime, setSpeed[0], setSpeed[1], drive.getLeftDriveVelocity(), drive.getRightDriveVelocity());
 
@@ -178,6 +186,7 @@ public class Robot extends TimedRobot {
       m_autonomousCommand.cancel();
     }
     logger.logDoubles("DrivetrainLog", Timer.getFPGATimestamp(), ((double) drive.getLeftDriveVelocity()));
+    drive.setBrakeMode();
   }
 
 
@@ -202,12 +211,12 @@ public class Robot extends TimedRobot {
     if(m_oi.driver.getRawButton(1)){
       drive.setDriveVelocity(SmartDashboard.getNumber("targetVelL", 0), SmartDashboard.getNumber("targetVelR", 0));
     }
-
+    /*
     //runs every 100ms
     if (Timer.getFPGATimestamp() - lastLoop > 0.05) {
       logger.logDoubles("ImplementingTest0", Timer.getFPGATimestamp(), drive.getLeftDriveVelocity());
       lastLoop = Timer.getFPGATimestamp();
-    }
+    }*/
   }
 
   /**
