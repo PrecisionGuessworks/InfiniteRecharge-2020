@@ -70,7 +70,7 @@ public class DriveTrainSubsystem implements Subsystem {
   public static final double MAX_VEL = 20; //fps 
   public static final double KV = .002 + 1/MAX_VEL;
   public static final double MAX_ACCEL = 24; //fps
-  public static final double KA = 0.0025;
+  public static final double KA = 0.0015;
   public static final double COUNTS_TO_FEET = (1/12.0) * WHEEL_CIRCUMFERENCE * (1/2048.0) * (1/7.56); 
   private static DriveTrainSubsystem instance;
   
