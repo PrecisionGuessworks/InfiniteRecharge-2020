@@ -25,23 +25,23 @@ public class RobotMap {
   // public static int rangefinderModule = 1;
 
   // SUBSYSTEM_NAME_OF_OBJECT_ID
-  public static int SHOOTER_UPPER_FLYWHEEL_ID = 0;
-  public static int SHOOTER_LOWER_FLYWHEEL_ID = 0;
-  public static int SHOOTER_TURRET_MOTOR_ID = 0;
+  public static int SHOOTER_UPPER_FLYWHEEL_ID = 21;
+  public static int SHOOTER_LOWER_FLYWHEEL_ID = 20;
+  public static int SHOOTER_TURRET_MOTOR_ID = 22;
 
   
-  public static int DRIVETRAIN_LEFT_MASTER_ID = 10;
-  public static int DRIVETRAIN_LEFT_FOLLOWER1_ID = 11;
-  public static int DRIVETRAIN_LEFT_FOLLOWER2_ID = 12;
+  public static int DRIVETRAIN_LEFT_MASTER_ID = 00;
+  public static int DRIVETRAIN_LEFT_FOLLOWER1_ID = 01;
+  public static int DRIVETRAIN_LEFT_FOLLOWER2_ID = 02;
   
-  public static int DRIVETRAIN_RIGHT_MASTER_ID = 20;
-  public static int DRIVETRAIN_RIGHT_FOLLOWER1_ID = 21;
-  public static int DRIVETRAIN_RIGHT_FOLLOWER2_ID = 22;
+  public static int DRIVETRAIN_RIGHT_MASTER_ID = 10;
+  public static int DRIVETRAIN_RIGHT_FOLLOWER1_ID = 11;
+  public static int DRIVETRAIN_RIGHT_FOLLOWER2_ID = 12;
 
 
   public static int INTAKE_INTAKE_ROLLER_ID = -1;
   public static int INTAKE_INTAKE_ARM_MOTOR_ID = -1;
-  public static int INTAKE_HOPPER_INDEXER_ID = -1;
-  public static int INTAKE_HOPPER_AGGITATOR_ID = -1;
-  public static int INTAKE_LIFT_MOTOR_ID = -1;
+  public static int INTAKE_HOPPER_INDEXER_ID = 32;
+  public static int INTAKE_HOPPER_AGGITATOR_ID = 33;
+  public static int INTAKE_LIFT_MOTOR_ID = 30;
 }

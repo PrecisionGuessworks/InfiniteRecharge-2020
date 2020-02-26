@@ -26,9 +26,9 @@ import frc.robot.commands.intakecommands.StagingCommand;
 import frc.robot.commands.shootercommands.ContinualFiringCommand;
 import frc.robot.commands.shootercommands.LongShotCommand;
 import frc.robot.commands.shootercommands.PrecisionShotCommand;
-import frc.robot.commands.shootercommands.QuickShotCommand;
-import frc.robot.commands.shootercommands.RotateTurretLeftCommand;
-import frc.robot.commands.shootercommands.RotateTurretRightCommand;
+//import frc.robot.commands.shootercommands.QuickShotCommand;
+//import frc.robot.commands.shootercommands.RotateTurretLeftCommand;
+//import frc.robot.commands.shootercommands.RotateTurretRightCommand;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import edu.wpi.first.wpilibj2.command.button.Button;
 
@@ -54,21 +54,23 @@ public class OI {
   private OI(){
     driver = new Joystick(0);
     operator = new Joystick(1);
-
+    /*
     b = new Button() {
       @Override
       public boolean get() {
         return driver.getRawButton(2);
       }
     };
+
     b.whileHeld(new QuickShotCommand());
+    */
     a = new Button() {
       @Override
       public boolean get() {
         return driver.getRawButton(1);
       }
     };
-    a.whileHeld(new FeedingCommand());
+    //a.whileHeld(new FeedingCommand());
     x = new Button() {
       @Override
       public boolean get(){
@@ -103,6 +105,7 @@ public class OI {
         return driver.getRawButton(7);
       }
     };
+    /*
     back.whileHeld(new RotateTurretLeftCommand());
     start = new Button(){
       @Override
@@ -110,7 +113,7 @@ public class OI {
         return driver.getRawButton(8);
       }
     };
-    start.whileHeld(new RotateTurretRightCommand());
+    start.whileHeld(new RotateTurretRightCommand());*/
 
 
 
@@ -149,7 +152,7 @@ public class OI {
 
   public double getDriverTurn(){
     final double turn = driver.getRawAxis(4);
-    return Math.pow(turn, 3) * 0.4;// * (turn < 0 ? -1 : 1);
+    return Math.pow(turn, 3) * 0.6;// * (turn < 0 ? -1 : 1);
   }
 
   //// CREATING BUTTONS

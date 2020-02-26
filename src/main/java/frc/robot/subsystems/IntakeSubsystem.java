@@ -9,6 +9,7 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
+import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
 import edu.wpi.first.wpilibj.Talon;
 import edu.wpi.first.wpilibj.Ultrasonic;
@@ -22,9 +23,10 @@ public class IntakeSubsystem extends SubsystemBase {
   */
   private Talon intakeRoller;
   private Talon intakeArmMotor;
-  private Talon hopperIndexer;
-  private TalonSRX hopperAggitator;
-  private Talon liftMotor;
+  private VictorSPX hopperIndexer;
+  private VictorSPX hopperAggitator;
+  private VictorSPX liftMotor;
+
 
   private intakeStates currentState;
 
@@ -37,11 +39,12 @@ public class IntakeSubsystem extends SubsystemBase {
   public static IntakeSubsystem instance;
 
   public IntakeSubsystem() {
-    intakeRoller = new Talon(RobotMap.INTAKE_INTAKE_ROLLER_ID);
-    intakeArmMotor = new Talon(RobotMap.INTAKE_INTAKE_ARM_MOTOR_ID);
-    hopperIndexer = new Talon(RobotMap.INTAKE_HOPPER_INDEXER_ID);
-    hopperAggitator = new TalonSRX(RobotMap.INTAKE_HOPPER_AGGITATOR_ID);
-    liftMotor = new Talon(RobotMap.INTAKE_LIFT_MOTOR_ID);
+    //intakeRoller = new Talon(RobotMap.INTAKE_INTAKE_ROLLER_ID);
+    //intakeArmMotor = new Talon(RobotMap.INTAKE_INTAKE_ARM_MOTOR_ID);
+    hopperIndexer = new VictorSPX(RobotMap.INTAKE_HOPPER_INDEXER_ID);
+    hopperAggitator = new VictorSPX(RobotMap.INTAKE_HOPPER_AGGITATOR_ID);
+    liftMotor = new VictorSPX(RobotMap.INTAKE_LIFT_MOTOR_ID);
+
   }
 
   public static IntakeSubsystem getInstance(){
@@ -60,7 +63,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void setIndexerPower(double power){
-    hopperIndexer.set(power);
+    hopperIndexer.set(ControlMode.PercentOutput, power);
   }
 
   public void setAggitatorPower(double power){    //this one is funkier than it seems?
@@ -68,7 +71,7 @@ public class IntakeSubsystem extends SubsystemBase {
   }
 
   public void setLiftMotorPower(double power){
-    liftMotor.set(power);
+    liftMotor.set(ControlMode.PercentOutput, power);
   }
 //TODO: LIMELIGHT THINGS
   public void setState(intakeStates newState){
