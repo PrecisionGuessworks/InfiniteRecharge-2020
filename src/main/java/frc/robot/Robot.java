@@ -9,6 +9,7 @@ package frc.robot;
 
 import java.util.ArrayList;
 
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.command.Command;
@@ -22,6 +23,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.util.Logger;
+import frc.robot.subsystems.IntakeSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -201,6 +203,9 @@ public class Robot extends TimedRobot {
     double turn = m_oi.getDriverTurn();
     boolean quickturn = m_oi.driver.getRawButton(6);
     //drive.setDrivePower(throttle+turn, throttle-turn);
+    
+//TODO: someone help matthew figure out what im doing to set intake speed to make Ms. Rubacha happy.
+    //IntakeSubsystem.getInstance().setIntakePower();
     
     if (Math.abs(throttle) < QTURN_THRESHOLD) {
       quickturn = true;

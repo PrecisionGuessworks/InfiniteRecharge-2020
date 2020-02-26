@@ -32,11 +32,11 @@ public class RobotMap {
   
   public static int DRIVETRAIN_LEFT_MASTER_ID = 10;
   public static int DRIVETRAIN_LEFT_FOLLOWER1_ID = 11;
-  public static int DRIVETRAIN_LEFT_FOLLOWER2_ID = 12;
+  //public static int DRIVETRAIN_LEFT_FOLLOWER2_ID = 12;
   
   public static int DRIVETRAIN_RIGHT_MASTER_ID = 20;
   public static int DRIVETRAIN_RIGHT_FOLLOWER1_ID = 21;
-  public static int DRIVETRAIN_RIGHT_FOLLOWER2_ID = 22;
+  //public static int DRIVETRAIN_RIGHT_FOLLOWER2_ID = 22;
 
 
   public static int INTAKE_INTAKE_ROLLER_ID = -1;

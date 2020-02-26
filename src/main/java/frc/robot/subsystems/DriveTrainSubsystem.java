@@ -98,11 +98,11 @@ public class DriveTrainSubsystem implements Subsystem {
 
     leftmotor[0] = TalonFXFactory.createPIDTalonFX(RobotMap.DRIVETRAIN_LEFT_MASTER_ID, false, leftkP, leftkI, leftkD, leftkF);
     leftmotor[1] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_LEFT_FOLLOWER1_ID, leftmotor[0]);
-    leftmotor[2] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_LEFT_FOLLOWER2_ID, leftmotor[0]);
+   // leftmotor[2] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_LEFT_FOLLOWER2_ID, leftmotor[0]);
 
     rightmotor[0] = TalonFXFactory.createPIDTalonFX(RobotMap.DRIVETRAIN_RIGHT_MASTER_ID, true, rightkP, rightkI, rightkD, rightkF);
     rightmotor[1] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_RIGHT_FOLLOWER1_ID, rightmotor[0]);
-    rightmotor[2] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_RIGHT_FOLLOWER2_ID, rightmotor[0]);
+    //rightmotor[2] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_RIGHT_FOLLOWER2_ID, rightmotor[0]);
 
 
     SmartDashboard.putNumber("Speed", 0.5);
@@ -136,19 +136,19 @@ public class DriveTrainSubsystem implements Subsystem {
   public void setCoastMode(){
     leftmotor[0].setNeutralMode(NeutralMode.Coast);
     leftmotor[1].setNeutralMode(NeutralMode.Coast);
-    leftmotor[2].setNeutralMode(NeutralMode.Coast);
+    //leftmotor[2].setNeutralMode(NeutralMode.Coast);
     rightmotor[0].setNeutralMode(NeutralMode.Coast);
     rightmotor[1].setNeutralMode(NeutralMode.Coast);
-    rightmotor[2].setNeutralMode(NeutralMode.Coast);
+    //rightmotor[2].setNeutralMode(NeutralMode.Coast);
   }
 
   public void setBrakeMode(){
     leftmotor[0].setNeutralMode(NeutralMode.Brake);
     leftmotor[1].setNeutralMode(NeutralMode.Brake);
-    leftmotor[2].setNeutralMode(NeutralMode.Brake);
+   // leftmotor[2].setNeutralMode(NeutralMode.Brake);
     rightmotor[0].setNeutralMode(NeutralMode.Brake);
     rightmotor[1].setNeutralMode(NeutralMode.Brake);
-    rightmotor[2].setNeutralMode(NeutralMode.Brake);
+   // rightmotor[2].setNeutralMode(NeutralMode.Brake);
   }
 
   public double[] setSpeedbyTrajectory(Trajectory traject, double time){
