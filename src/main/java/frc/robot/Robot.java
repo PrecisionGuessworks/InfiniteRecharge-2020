@@ -22,6 +22,8 @@ import edu.wpi.first.wpilibj.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryConfig;
 import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import frc.robot.subsystems.DriveTrainSubsystem;
+import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.util.Logger;
 import frc.robot.subsystems.IntakeSubsystem;
 
@@ -36,6 +38,7 @@ public class Robot extends TimedRobot {
   //public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
   public static OI m_oi;
   public static DriveTrainSubsystem drive = DriveTrainSubsystem.getInstance();
+  public static IntakeSubsystem intake = IntakeSubsystem.getInstance();
 
   public static final double QTURN_THRESHOLD = 0.1;
   public static Logger logger;
@@ -209,12 +212,48 @@ public class Robot extends TimedRobot {
     if (Math.abs(throttle) < QTURN_THRESHOLD) {
       quickturn = true;
     }
-    
+    //test
     drive.setDrivePowerWithCurvature(throttle, turn, quickturn);
 
-    if(m_oi.driver.getRawButton(1)){
-      drive.setDriveVelocity(SmartDashboard.getNumber("targetVelL", 0), SmartDashboard.getNumber("targetVelR", 0));
+    if(m_oi.operator.getRawButton(1)){
+      //drive.setDriveVelocity(SmartDashboard.getNumber("targetVelL", 0), SmartDashboard.getNumber("targetVelR", 0));
+      ShooterSubsystem.getInstance().setShooterPower(-0.55, -0.55);
+      
+      
+    }else{
+      ShooterSubsystem.getInstance().setShooterPower(0.0, 0.0);
+      IntakeSubsystem.getInstance().setLiftMotorPower(0.0);
+      
     }
+
+    if(m_oi.operator.getRawButton(2)){
+      IntakeSubsystem.getInstance().setLiftMotorPower(-0.8);
+    }else{
+      IntakeSubsystem.getInstance().setLiftMotorPower(0.0);
+    }
+<<<<<<< HEAD
+=======
+
+    if(m_oi.operator.getRawButton(3)){
+      IntakeSubsystem.getInstance().setLiftMotorPower(-0.8);
+      IntakeSubsystem.getInstance().setIndexerPower(-0.8);
+      IntakeSubsystem.getInstance().setAggitatorPower(0.5);
+    }else{
+      IntakeSubsystem.getInstance().setLiftMotorPower(0.0);
+      IntakeSubsystem.getInstance().setIndexerPower(0.0);
+      IntakeSubsystem.getInstance().setAggitatorPower(0.0);
+    }
+/*
+    if(m_oi.operator.getRawButton(4)) {
+      ShooterSubsystem.getInstance().setTurretPower(0.5);
+    }else {
+      ShooterSubsystem.getInstance().setTurretPower(0.0);
+    }
+*/
+    
+
+    System.out.println(ShooterSubsystem.getInstance().getTurretPosition());
+>>>>>>> bf09054b29441d07c34932eef2dcdf7b585680a5
     /*
     //runs every 100ms
     if (Timer.getFPGATimestamp() - lastLoop > 0.05) {
