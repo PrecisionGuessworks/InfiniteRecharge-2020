@@ -11,10 +11,10 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.subsystems.ShooterSubsystem;
 import frc.robot.subsystems.ShooterSubsystem.shooterStates;
 
-public class QuickShotCommand extends CommandBase {
+public class RotateTurretLeftCommand extends CommandBase {
   private ShooterSubsystem shooter;
 
-  public QuickShotCommand() {
+  public RotateTurretLeftCommand() {
     shooter = ShooterSubsystem.getInstance();
     addRequirements(ShooterSubsystem.getInstance());
     // Use addRequirements() here to declare subsystem dependencies.

@@ -64,7 +64,7 @@ public class Robot extends TimedRobot {
 
     
 
-    logger.createLogStream("DrivetrainLog");
+    //logger.createLogStream("DrivetrainLog");
 
     SmartDashboard.putNumber("targetVelL", 0);
     SmartDashboard.putNumber("targetVelR", 0);
@@ -166,7 +166,7 @@ public class Robot extends TimedRobot {
       setSpeed = drive.setSpeedbyTrajectory(testTraj1, currTime - testTraj0.getTotalTimeSeconds());
     }
 
-    logger.logDoubles("DrivetrainLog", currTime, setSpeed[0], setSpeed[1], drive.getLeftDriveVelocity(), drive.getRightDriveVelocity());
+    //logger.logDoubles("DrivetrainLog", currTime, setSpeed[0], setSpeed[1], drive.getLeftDriveVelocity(), drive.getRightDriveVelocity());
 
     //SmartDashboard.putNumber("Trajectory Speeds", setSpeed);
     SmartDashboard.putNumber("LeftDriveSpeed", drive.getLeftDriveVelocity());
@@ -187,7 +187,7 @@ public class Robot extends TimedRobot {
     if (m_autonomousCommand != null) {
       m_autonomousCommand.cancel();
     }
-    logger.logDoubles("DrivetrainLog", Timer.getFPGATimestamp(), ((double) drive.getLeftDriveVelocity()));
+    //logger.logDoubles("DrivetrainLog", Timer.getFPGATimestamp(), ((double) drive.getLeftDriveVelocity()));
     drive.setBrakeMode();
   }
 
@@ -202,7 +202,6 @@ public class Robot extends TimedRobot {
     double throttle = m_oi.getDriverThrottle();
     double turn = m_oi.getDriverTurn();
     boolean quickturn = m_oi.driver.getRawButton(6);
-    //drive.setDrivePower(throttle+turn, throttle-turn);
     
 //TODO: someone help matthew figure out what im doing to set intake speed to make Ms. Rubacha happy.
     //IntakeSubsystem.getInstance().setIntakePower();

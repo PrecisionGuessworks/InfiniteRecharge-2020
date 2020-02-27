@@ -62,6 +62,7 @@ public class OI {
       }
     };
     b.whileHeld(new QuickShotCommand());
+
     a = new Button() {
       @Override
       public boolean get() {
@@ -69,6 +70,7 @@ public class OI {
       }
     };
     a.whileHeld(new FeedingCommand());
+
     x = new Button() {
       @Override
       public boolean get(){
@@ -76,6 +78,7 @@ public class OI {
       }
     };
     x.whileHeld(new LongShotCommand());
+
     y = new Button() {
       @Override
       public boolean get(){
@@ -83,6 +86,7 @@ public class OI {
       }
     };
     y.whileHeld(new PrecisionShotCommand());
+
     lB = new Button(){
       @Override
       public boolean get(){
@@ -90,6 +94,7 @@ public class OI {
       }
     };
     lB.whileHeld(new StagingCommand());
+
     rB = new Button(){
       @Override
       public boolean get(){
@@ -97,6 +102,7 @@ public class OI {
       }
     };
     rB.whileHeld(new ContinualFiringCommand());
+
     back = new Button() {
       @Override
       public boolean get(){
@@ -104,6 +110,7 @@ public class OI {
       }
     };
     back.whileHeld(new RotateTurretLeftCommand());
+
     start = new Button(){
       @Override
       public boolean get(){
