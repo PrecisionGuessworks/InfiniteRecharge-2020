@@ -31,4 +31,17 @@ public class FieldPositions {
 
     public static Pose2d OPP_TRENCH_CELL_1 = new Pose2d(10.9, 23.8, new Rotation2d());
 
+    public static double DIST_CENTER_TO_INTAKE = 2.08;
+
+    public static Pose2d AddRotation(Pose2d pos, Rotation2d rotation){
+        return new Pose2d(pos.getTranslation(), rotation);
+    }
+    
+    public static Pose2d pointAtIntake(Pose2d pos){
+        double x = pos.getTranslation().getX();
+        double y = pos.getTranslation().getY();
+        double heading = pos.getRotation().getRadians();
+        return new Pose2d(x - DIST_CENTER_TO_INTAKE*Math.cos(heading), y - DIST_CENTER_TO_INTAKE*Math.sin(heading), pos.getRotation());
+    }
+
 }

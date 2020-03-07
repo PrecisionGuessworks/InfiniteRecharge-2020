@@ -24,6 +24,7 @@ import edu.wpi.first.wpilibj.trajectory.TrajectoryGenerator;
 import frc.robot.subsystems.DriveTrainSubsystem;
 import frc.robot.util.Logger;
 import frc.robot.subsystems.IntakeSubsystem;
+import frc.robot.subsystems.ShooterSubsystem;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -36,6 +37,8 @@ public class Robot extends TimedRobot {
   //public static ExampleSubsystem m_subsystem = new ExampleSubsystem();
   public static OI m_oi;
   public static DriveTrainSubsystem drive = DriveTrainSubsystem.getInstance();
+  public static ShooterSubsystem shooter = ShooterSubsystem.getInstance();
+  public static IntakeSubsystem intake = IntakeSubsystem.getInstance();
 
   public static final double QTURN_THRESHOLD = 0.1;
   public static Logger logger;
@@ -65,6 +68,7 @@ public class Robot extends TimedRobot {
     
 
     //logger.createLogStream("DrivetrainLog");
+    logger.createLogStream("ShooterTuning");
 
     SmartDashboard.putNumber("targetVelL", 0);
     SmartDashboard.putNumber("targetVelR", 0);
@@ -106,8 +110,9 @@ public class Robot extends TimedRobot {
   public void disabledInit() {
     startTime = -1.0;
 
-    logger.flush("DrivetrainLog");
+    logger.flush("ShooterTuning");
     drive.setCoastMode();
+    shooter.setCoastMode();
   }
 
   @Override
@@ -171,6 +176,7 @@ public class Robot extends TimedRobot {
     //SmartDashboard.putNumber("Trajectory Speeds", setSpeed);
     SmartDashboard.putNumber("LeftDriveSpeed", drive.getLeftDriveVelocity());
     SmartDashboard.putNumber("LeftDrivePosition", drive.getDrivePosition());
+
   }
 
   @Override
@@ -203,23 +209,83 @@ public class Robot extends TimedRobot {
     double turn = m_oi.getDriverTurn();
     boolean quickturn = m_oi.driver.getRawButton(6);
     
-//TODO: Someone help Matthew figure out what im doing to set intake speed to make Ms. Rubacha happy.
-    //IntakeSubsystem.getInstance().setIntakePower();
+    double currtime = Timer.getFPGATimestamp() - startTime;
     
     if (Math.abs(throttle) < QTURN_THRESHOLD) {
       quickturn = true;
     }
-    
+    //test
     drive.setDrivePowerWithCurvature(throttle, turn, quickturn);
 
-    if(m_oi.driver.getRawButton(1)){
-      drive.setDriveVelocity(SmartDashboard.getNumber("targetVelL", 0), SmartDashboard.getNumber("targetVelR", 0));
+    //rB causes pewpew
+    if(m_oi.operator.getRawButton(6)){
+      shooter.setShooterPower(-.625, -.625);
+      //shooter.setShooterSpeed(2700, 2700);
+    }else{
+      shooter.setShooterPower(0.0, 0.0);
     }
-    /*
+    //Y button ups, A button downs
+    if(m_oi.operator.getRawButton(4)){
+      intake.setLiftMotorPower(0.8);
+    }else if(m_oi.operator.getRawButton(1)){
+      intake.setLiftMotorPower(-0.4);
+    }else{
+      intake.setLiftMotorPower(0.0);
+    }
+    //X button intakes
+    if(m_oi.operator.getRawButton(3)){
+      intake.setIndexerPower(.9);
+      intake.setAggitatorPower(0.9);
+    }else{
+      intake.setIndexerPower(0.0);
+      intake.setAggitatorPower(0.0);
+    }
+
+    
+    //Right Stick turns turret
+    /*if(m_oi.operator.getRawAxis(0) > 0.1){
+      shooter.setTurretPower(.3);
+    } else if(m_oi.operator.getRawAxis(0) < -0.1) {
+      shooter.setTurretPower(-.3);
+    } else {
+      shooter.setTurretPower(0);
+    }
+    */
+
+      double x_axis = m_oi.operator.getRawAxis(0);
+      double y_axis = m_oi.operator.getRawAxis(1);
+
+    if((x_axis * x_axis) + (y_axis * y_axis) > 0.25) {
+      shooter.setTurretPositionRadians(m_oi.operator.getDirectionRadians());
+      System.out.println(m_oi.operator.getDirectionRadians());
+    } 
+
+    // shooter.setTurretPosition(12000);
+    //SmartDashboard.putNumber("TurretPosition", ShooterSubsystem.getInstance().getTurretPosition());
+    
+
+    //intake.setIntakeArmPower(m_oi.operator.getRawAxis(5));
+
+    
+
+    //-16440
+    //-9842
+    //1120
+    //12319
+    //16156
+
+
+    /*if(m_oi.driver.getRawButton(1)){
+      drive.setDriveVelocity(SmartDashboard.getNumber("targetVelL", 0), SmartDashboard.getNumber("targetVelR", 0));
+    }*/
+
+    logger.logDoubles("ShooterTuning", currtime, shooter.getFlywheelSpeed()[0], shooter.getFlywheelSpeed()[1]);
+
     //runs every 100ms
-    if (Timer.getFPGATimestamp() - lastLoop > 0.05) {
-      logger.logDoubles("ImplementingTest0", Timer.getFPGATimestamp(), drive.getLeftDriveVelocity());
-      lastLoop = Timer.getFPGATimestamp();
+    //Something about this loop causes nothing to work; crashes code, won't log stuff, etc.
+    /*if (currtime - lastLoop > 0.05) {
+      logger.logDoubles("ShooterTuning", currtime, shooter.getFlywheelSpeed()[0], shooter.getFlywheelSpeed()[1]);
+      lastLoop = currtime;
     }*/
   }
 

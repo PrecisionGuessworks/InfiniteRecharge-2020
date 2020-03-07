@@ -9,19 +9,18 @@ package frc.robot.subsystems;
 
 import com.ctre.phoenix.motorcontrol.ControlMode;
 import com.ctre.phoenix.motorcontrol.FeedbackDevice;
+import com.ctre.phoenix.motorcontrol.NeutralMode;
 import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.TalonSRX;
-import com.ctre.phoenix.motorcontrol.can.VictorSPX;
 
+import edu.wpi.first.networktables.NetworkTable;
+import edu.wpi.first.networktables.NetworkTableEntry;
+import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.RobotMap;
 import frc.robot.lib.TalonFXFactory;
 import frc.robot.lib.TalonSRXFactory;
-import edu.wpi.first.wpilibj.Talon;
-import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.networktables.NetworkTable;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import frc.robot.util.Constants;
 
 public class ShooterSubsystem extends SubsystemBase {
   /**
@@ -47,13 +46,25 @@ public class ShooterSubsystem extends SubsystemBase {
 
   public static final double TURRET_POSITION = 6 + 6;   //TODO: Find/make the conversion factor
   public static final double SHOOTER_RPM_TO_CP100MS = (2048f / (60f * 10f));
+  public static final double SHOOTER_RADIANS_TO_CP100MS = (22161/Math.PI);
+  public static final double LIMELIGHTX_TO_RADIANS = (1);
 
   public static ShooterSubsystem instance;
 
   private ShooterSubsystem() {
-    upperFlywheel = TalonFXFactory.createPIDTalonFX(RobotMap.SHOOTER_UPPER_FLYWHEEL_ID, false, 0.0, 0.0, 0.0, 0.0);
-    lowerFlywheel = TalonFXFactory.createPIDTalonFX(RobotMap.SHOOTER_LOWER_FLYWHEEL_ID, true, 0.0, 0.0, 0.0, 0.0);
-    turretMotor = TalonSRXFactory.createPIDTalonSRX(RobotMap.SHOOTER_TURRET_MOTOR_ID, 0.01, 0, 0, 0, FeedbackDevice.CTRE_MagEncoder_Absolute);
+    upperFlywheel = TalonFXFactory.createPIDTalonFX(RobotMap.SHOOTER_UPPER_FLYWHEEL_ID, 
+                                                    false, 
+                                                    Constants.SHOOTER_UPPER_FLYWHEEL_CONSTANTS.p, 
+                                                    Constants.SHOOTER_UPPER_FLYWHEEL_CONSTANTS.i, 
+                                                    Constants.SHOOTER_UPPER_FLYWHEEL_CONSTANTS.d, 
+                                                    Constants.SHOOTER_UPPER_FLYWHEEL_CONSTANTS.f);
+    lowerFlywheel = TalonFXFactory.createPIDTalonFX(RobotMap.SHOOTER_LOWER_FLYWHEEL_ID, 
+                                                    true, 
+                                                    Constants.SHOOTER_LOWER_FLYWHEEL_CONSTANTS.p, 
+                                                    Constants.SHOOTER_LOWER_FLYWHEEL_CONSTANTS.i, 
+                                                    Constants.SHOOTER_LOWER_FLYWHEEL_CONSTANTS.d, 
+                                                    Constants.SHOOTER_LOWER_FLYWHEEL_CONSTANTS.f);
+    turretMotor = TalonSRXFactory.createPIDTalonSRX(RobotMap.SHOOTER_TURRET_MOTOR_ID, 0.2, 0, 0, 0, FeedbackDevice.CTRE_MagEncoder_Absolute);
     currentState = shooterStates.STATIONARY;
 
     
@@ -108,7 +119,6 @@ public class ShooterSubsystem extends SubsystemBase {
   public void setShooterPower(double upperPower, double lowerPower){
     upperFlywheel.set(ControlMode.PercentOutput, upperPower);
     lowerFlywheel.set(ControlMode.PercentOutput, lowerPower);
-
   }
 
   public void setShooterSpeed(double upperSpeed, double lowerSpeed){
@@ -119,28 +129,45 @@ public class ShooterSubsystem extends SubsystemBase {
   }
 
   public void setTurretPosition(double position){
-    if (position < -11000){
-      position = -10000;
+    if (position < -9842){
+      position = -9842;
     }
-    if (position > 8000){
-      position = 10000;
+    if (position > 12319){
+      position = 12319;
     }
     turretMotor.set(ControlMode.Position, position);
   }
 
-  public double getTurretPosition(){
-    return turretMotor.getSelectedSensorPosition();
+  public void setTurretPositionRadians(double radians) {
+    setTurretPosition(-1238 + radians * SHOOTER_RADIANS_TO_CP100MS);
   }
 
-  public boolean rotateToTarget(double limelightX, double tolerance) {
-    //TODO: Finish this method
-    return false;
+  public double getTurretPositionRadians(){
+    return (turretMotor.getSelectedSensorPosition() + 1238) /SHOOTER_RADIANS_TO_CP100MS;
   }
+
+  public void setTurretWithLimelight() {
+    double curPos = getTurretPositionRadians();
+    NetworkTableEntry tx = limelightTable.getEntry("tx");
+    double limelightX = tx.getDouble(0.0);
+    double limeLightRadians = limelightX * LIMELIGHTX_TO_RADIANS;
+  }
+
   public void setTurretPower(double turretPower){
     turretMotor.set(ControlMode.PercentOutput, turretPower);
   }
 
-  
+  public void setCoastMode(){
+    upperFlywheel.setNeutralMode(NeutralMode.Coast);
+    lowerFlywheel.setNeutralMode(NeutralMode.Coast);
+  }
+
+  public double[] getFlywheelSpeed(){
+    double upperSpeed = upperFlywheel.getSelectedSensorVelocity() * 1/SHOOTER_RPM_TO_CP100MS;
+    double lowerSpeed = lowerFlywheel.getSelectedSensorVelocity() * 1/SHOOTER_RPM_TO_CP100MS;
+    double[] speeds = new double[]{upperSpeed, lowerSpeed};
+    return speeds;
+  }
 
 
 

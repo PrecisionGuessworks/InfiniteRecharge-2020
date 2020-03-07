@@ -12,8 +12,8 @@ package frc.robot.util;
  */
 public class Constants {
 
-    public static PIDConstants SHOOTER_LOWER_FLYWHEEL_CONSTANTS = new PIDConstants(0, 0, 0, 0);
-    public static PIDConstants SHOOTER_UPPER_FLYWHEEL_CONSTANTS = new PIDConstants(0, 0, 0, 0);
+    public static PIDConstants SHOOTER_LOWER_FLYWHEEL_CONSTANTS = new PIDConstants(0.3, 0.0003, 0.2, 0);
+    public static PIDConstants SHOOTER_UPPER_FLYWHEEL_CONSTANTS = new PIDConstants(0.3, 0.0003, 0.2, 0);
     public static PIDConstants SHOOTER_TURRET_CONSTANTS = new PIDConstants(0, 0, 0, 0);
 
     public static PIDConstants DRIVETRAIN_LEFT = new PIDConstants(0.15, 0.0, 0.05, 0);
@@ -24,6 +24,8 @@ public class Constants {
     public static double SHOOTER_SHORT_UPPER_WHEEL_SPEED = 2700;
     public static double SHOOTER_SHORT_LOWER_WHEEL_SPEED = 2700;
 
+    public static boolean COMPETITION_ROBOT = true;
+    
     public static class PIDConstants {
 
         public PIDConstants(double p, double i, double d, double f) {

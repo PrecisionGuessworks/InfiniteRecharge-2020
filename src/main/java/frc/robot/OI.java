@@ -157,7 +157,7 @@ public class OI {
 
   public double getDriverTurn(){
     final double turn = driver.getRawAxis(4);
-    return Math.pow(turn, 3) * 0.6;// * (turn < 0 ? -1 : 1);
+    return Math.pow(turn, 3);// * (turn < 0 ? -1 : 1);
   }
 
   //// CREATING BUTTONS

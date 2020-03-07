@@ -42,6 +42,8 @@ public class IntakeSubsystem extends SubsystemBase {
     hopperIndexer = new VictorSPX(RobotMap.INTAKE_HOPPER_INDEXER_ID);
     hopperAggitator = new TalonSRX(RobotMap.INTAKE_HOPPER_AGGITATOR_ID);
     liftMotor = new VictorSPX(RobotMap.INTAKE_LIFT_MOTOR_ID);
+    liftMotor.setInverted(true);
+    hopperIndexer.setInverted(true);
   }
 
   public static IntakeSubsystem getInstance(){

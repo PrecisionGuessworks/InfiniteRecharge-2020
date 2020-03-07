@@ -96,14 +96,21 @@ public class DriveTrainSubsystem implements Subsystem {
     leftmotor = new TalonFX[3];
     rightmotor = new TalonFX[3];
 
-    leftmotor[0] = TalonFXFactory.createPIDTalonFX(RobotMap.DRIVETRAIN_LEFT_MASTER_ID, false, leftkP, leftkI, leftkD, leftkF);
-    leftmotor[1] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_LEFT_FOLLOWER1_ID, leftmotor[0]);
-   // leftmotor[2] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_LEFT_FOLLOWER2_ID, leftmotor[0]);
+    if(Constants.COMPETITION_ROBOT){
+      leftmotor[0] = TalonFXFactory.createPIDTalonFX(RobotMap.DRIVETRAIN_LEFT_MASTER_ID, true, leftkP, leftkI, leftkD, leftkF);
+      leftmotor[1] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_LEFT_FOLLOWER1_ID, leftmotor[0]);
+      leftmotor[2] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_LEFT_FOLLOWER2_ID, leftmotor[0]);
 
-    rightmotor[0] = TalonFXFactory.createPIDTalonFX(RobotMap.DRIVETRAIN_RIGHT_MASTER_ID, true, rightkP, rightkI, rightkD, rightkF);
-    rightmotor[1] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_RIGHT_FOLLOWER1_ID, rightmotor[0]);
-    //rightmotor[2] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_RIGHT_FOLLOWER2_ID, rightmotor[0]);
+      rightmotor[0] = TalonFXFactory.createPIDTalonFX(RobotMap.DRIVETRAIN_RIGHT_MASTER_ID, false, rightkP, rightkI, rightkD, rightkF);
+      rightmotor[1] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_RIGHT_FOLLOWER1_ID, rightmotor[0]);
+      rightmotor[2] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_RIGHT_FOLLOWER2_ID, rightmotor[0]);
+    }else{
+      leftmotor[0] = TalonFXFactory.createPIDTalonFX(RobotMap.DRIVETRAIN_LEFT_MASTER_ID, false, leftkP, leftkI, leftkD, leftkF);
+      leftmotor[1] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_LEFT_FOLLOWER1_ID, leftmotor[0]);
 
+      rightmotor[0] = TalonFXFactory.createPIDTalonFX(RobotMap.DRIVETRAIN_RIGHT_MASTER_ID, true, rightkP, rightkI, rightkD, rightkF);
+      rightmotor[1] = TalonFXFactory.createFollowerTalonFX(RobotMap.DRIVETRAIN_RIGHT_FOLLOWER1_ID, rightmotor[0]);
+  }
 
     SmartDashboard.putNumber("Speed", 0.5);
     SmartDashboard.putNumber("Passcode", 0.0);
@@ -133,23 +140,39 @@ public class DriveTrainSubsystem implements Subsystem {
     return instance;
   }
 
+  
   public void setCoastMode(){
-    leftmotor[0].setNeutralMode(NeutralMode.Coast);
-    leftmotor[1].setNeutralMode(NeutralMode.Coast);
-    //leftmotor[2].setNeutralMode(NeutralMode.Coast);
-    rightmotor[0].setNeutralMode(NeutralMode.Coast);
-    rightmotor[1].setNeutralMode(NeutralMode.Coast);
-    //rightmotor[2].setNeutralMode(NeutralMode.Coast);
+    if(Constants.COMPETITION_ROBOT){
+      leftmotor[0].setNeutralMode(NeutralMode.Coast);
+      leftmotor[1].setNeutralMode(NeutralMode.Coast);
+      leftmotor[2].setNeutralMode(NeutralMode.Coast);
+      rightmotor[0].setNeutralMode(NeutralMode.Coast);
+      rightmotor[1].setNeutralMode(NeutralMode.Coast);
+      rightmotor[2].setNeutralMode(NeutralMode.Coast);
+    }else{
+      leftmotor[0].setNeutralMode(NeutralMode.Coast);
+      leftmotor[1].setNeutralMode(NeutralMode.Coast);
+      rightmotor[0].setNeutralMode(NeutralMode.Coast);
+      rightmotor[1].setNeutralMode(NeutralMode.Coast);
+    }
   }
-
+  
+  
   public void setBrakeMode(){
-    leftmotor[0].setNeutralMode(NeutralMode.Brake);
-    leftmotor[1].setNeutralMode(NeutralMode.Brake);
-   // leftmotor[2].setNeutralMode(NeutralMode.Brake);
-    rightmotor[0].setNeutralMode(NeutralMode.Brake);
-    rightmotor[1].setNeutralMode(NeutralMode.Brake);
-   // rightmotor[2].setNeutralMode(NeutralMode.Brake);
-  }
+    if(Constants.COMPETITION_ROBOT){
+      leftmotor[0].setNeutralMode(NeutralMode.Brake);
+      leftmotor[1].setNeutralMode(NeutralMode.Brake);
+      leftmotor[2].setNeutralMode(NeutralMode.Brake);
+      rightmotor[0].setNeutralMode(NeutralMode.Brake);
+      rightmotor[1].setNeutralMode(NeutralMode.Brake);
+      rightmotor[2].setNeutralMode(NeutralMode.Brake);
+    }else{
+      leftmotor[0].setNeutralMode(NeutralMode.Brake);
+      leftmotor[1].setNeutralMode(NeutralMode.Brake);
+      rightmotor[0].setNeutralMode(NeutralMode.Brake);
+      rightmotor[1].setNeutralMode(NeutralMode.Brake);
+      }
+    }
 
   public double[] setSpeedbyTrajectory(Trajectory traject, double time){
     double velocity = traject.sample(time).velocityMetersPerSecond;
@@ -196,10 +219,18 @@ public class DriveTrainSubsystem implements Subsystem {
       }
     }
 
-    //If it's turning the wrong direction on joysticks switch these signs
-    double leftMotorOutput = xSpeed - angularPower;
-    double rightMotorOutput = xSpeed + angularPower;
+    double leftMotorOutput;
+    double rightMotorOutput;
 
+    //If it's turning the wrong direction on joysticks switch these signs
+    if(Constants.COMPETITION_ROBOT){
+      leftMotorOutput = xSpeed + angularPower;
+      rightMotorOutput = xSpeed - angularPower;
+    }else{
+      leftMotorOutput = xSpeed - angularPower;
+      rightMotorOutput = xSpeed + angularPower;  
+    }
+    
     // If rotation is overpowered, reduce both outputs to within acceptable range
     if (overPower) {
       if (leftMotorOutput > 1.0) {

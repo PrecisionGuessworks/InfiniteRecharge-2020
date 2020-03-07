@@ -40,8 +40,8 @@ public class RobotMap {
 
 
   public static int INTAKE_INTAKE_ROLLER_ID = -1;
-  public static int INTAKE_INTAKE_ARM_MOTOR_ID = -1;
+  public static int INTAKE_INTAKE_ARM_MOTOR_ID = 33;
   public static int INTAKE_HOPPER_INDEXER_ID = 32;
-  public static int INTAKE_HOPPER_AGGITATOR_ID = 33;
+  public static int INTAKE_HOPPER_AGGITATOR_ID = -1;
   public static int INTAKE_LIFT_MOTOR_ID = 30;
 }
