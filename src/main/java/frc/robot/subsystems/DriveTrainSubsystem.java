@@ -45,7 +45,7 @@ public class DriveTrainSubsystem implements Subsystem {
   TalonFX[] leftmotor;
   TalonFX[] rightmotor;
   public OI oi;
-  public static final double driverPowerReduction = 0.5;
+  public static final double driverPowerReduction = 0.8;
 
   Trajectory traject;
 

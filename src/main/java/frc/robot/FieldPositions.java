@@ -31,9 +31,9 @@ public class FieldPositions {
 
     public static Pose2d OPP_TRENCH_CELL_1 = new Pose2d(10.9, 23.8, new Rotation2d());
 
-    public static double DIST_CENTER_TO_INTAKE = 2.08;
+    public static double DIST_CENTER_TO_INTAKE = 1.625;
 
-    public static Pose2d AddRotation(Pose2d pos, Rotation2d rotation){
+    public static Pose2d addRotation(Pose2d pos, Rotation2d rotation){
         return new Pose2d(pos.getTranslation(), rotation);
     }
     

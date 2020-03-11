@@ -26,6 +26,7 @@ import frc.robot.commands.intakecommands.StagingCommand;
 import frc.robot.commands.shootercommands.ContinualFiringCommand;
 import frc.robot.commands.shootercommands.LongShotCommand;
 import frc.robot.commands.shootercommands.PrecisionShotCommand;
+import frc.robot.commands.shootercommands.QuickShotCommand;
 //import frc.robot.commands.shootercommands.QuickShotCommand;
 //import frc.robot.commands.shootercommands.RotateTurretLeftCommand;
 //import frc.robot.commands.shootercommands.RotateTurretRightCommand;
@@ -54,7 +55,7 @@ public class OI {
   private OI(){
     driver = new Joystick(0);
     operator = new Joystick(1);
-    /*
+    
     b = new Button() {
       @Override
       public boolean get() {
@@ -109,8 +110,8 @@ public class OI {
         return driver.getRawButton(7);
       }
     };
-    /*
-    back.whileHeld(new RotateTurretLeftCommand());
+    
+    //back.whileHeld(new RotateTurretLeftCommand());
 
     start = new Button(){
       @Override
@@ -118,12 +119,12 @@ public class OI {
         return driver.getRawButton(8);
       }
     };
-    start.whileHeld(new RotateTurretRightCommand());*/
+   // start.whileHeld(new RotateTurretRightCommand());
 
 
 
 
-/*
+
     ArrayList<Pose2d> pointList = new ArrayList<>();
     pointList.add(new Pose2d());
     pointList.add(new Pose2d(10, 0, new Rotation2d()));
@@ -139,7 +140,6 @@ public class OI {
     //RamseteCommand ramComm = new RamseteCommand(testTraj, startPose, ramCont, kitnematic, setRamSpeeds, DriveTrainSubsystem.getInstance());
 
     
-    JoystickButton driverA = new JoystickButton(driver, 3);*/
     //driverA.whenPressed(comman);
   }
 

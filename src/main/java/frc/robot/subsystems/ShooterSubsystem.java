@@ -47,7 +47,12 @@ public class ShooterSubsystem extends SubsystemBase {
   public static final double TURRET_POSITION = 6 + 6;   //TODO: Find/make the conversion factor
   public static final double SHOOTER_RPM_TO_CP100MS = (2048f / (60f * 10f));
   public static final double SHOOTER_RADIANS_TO_CP100MS = (22161/Math.PI);
-  public static final double LIMELIGHTX_TO_RADIANS = (1);
+  public static final double LIMELIGHTX_TO_RADIANS = (Math.PI / 180);
+  
+  private double limelightX;
+  private double limelightY;
+  private double limelightArea;
+  private double limelightHasTarget;
 
   public static ShooterSubsystem instance;
 
@@ -142,15 +147,28 @@ public class ShooterSubsystem extends SubsystemBase {
     setTurretPosition(-1238 + radians * SHOOTER_RADIANS_TO_CP100MS);
   }
 
+  
+
   public double getTurretPositionRadians(){
     return (turretMotor.getSelectedSensorPosition() + 1238) /SHOOTER_RADIANS_TO_CP100MS;
   }
 
-  public void setTurretWithLimelight() {
+  public void setTurretWithLimelight(double defaultAngle) {
+
+    NetworkTableEntry tv = limelightTable.getEntry("tv");
+    limelightHasTarget = tv.getDouble(0);
+
     double curPos = getTurretPositionRadians();
     NetworkTableEntry tx = limelightTable.getEntry("tx");
     double limelightX = tx.getDouble(0.0);
     double limeLightRadians = limelightX * LIMELIGHTX_TO_RADIANS;
+    if(limelightHasTarget == 0) {
+      //does not have target
+      setTurretPositionRadians(defaultAngle);
+    } else {
+      //has target
+      setTurretPositionRadians(curPos + limeLightRadians);
+    }
   }
 
   public void setTurretPower(double turretPower){
@@ -177,12 +195,11 @@ public class ShooterSubsystem extends SubsystemBase {
   NetworkTableEntry tx = limelightTable.getEntry("tx");
   NetworkTableEntry ty = limelightTable.getEntry("ty");
   NetworkTableEntry ta = limelightTable.getEntry("ta");
-  NetworkTableEntry tv = limelightTable.getEntry("tv");
-
-  double limelightX = tx.getDouble(0.0);
-  double limelightY = ty.getDouble(0.0);
-  double limelightArea = ta.getDouble(0.0);
-  double limelightHasTarget = tv.getDouble(0);
+ 
+  limelightX = tx.getDouble(0.0);
+  limelightY = ty.getDouble(0.0);
+  limelightArea = ta.getDouble(0.0);
+ 
 
   }
 }

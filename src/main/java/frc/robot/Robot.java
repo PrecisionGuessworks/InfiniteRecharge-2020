@@ -68,10 +68,10 @@ public class Robot extends TimedRobot {
     
 
     //logger.createLogStream("DrivetrainLog");
-    logger.createLogStream("ShooterTuning");
+    //logger.createLogStream("ShooterTuning");
 
-    SmartDashboard.putNumber("targetVelL", 0);
-    SmartDashboard.putNumber("targetVelR", 0);
+    //SmartDashboard.putNumber("targetVelL", 0);
+    //SmartDashboard.putNumber("targetVelR", 0);
 
 
     ArrayList<Pose2d> pointList0 = new ArrayList<>();
@@ -79,12 +79,12 @@ public class Robot extends TimedRobot {
     //pointList0.add(new Pose2d(2.667, 0, new Rotation2d()));
     //pointList0.add(new Pose2d(15, 10, new Rotation2d(0)));
     pointList0.add(FieldPositions.START);
-    pointList0.add(FieldPositions.TRENCH_CELL_3);
+    pointList0.add(FieldPositions.addRotation(FieldPositions.pointAtIntake(FieldPositions.TRENCH_CELL_3), new Rotation2d()));
     testTraj0 = TrajectoryGenerator.generateTrajectory(pointList0, new TrajectoryConfig(10, 23).setReversed(false));
 
     ArrayList<Pose2d> pointList1 = new ArrayList<>();
 
-    pointList1.add(FieldPositions.TRENCH_CELL_3);
+    pointList1.add(FieldPositions.addRotation(FieldPositions.TRENCH_CELL_3, new Rotation2d()));
     pointList1.add(FieldPositions.OPPSHOT);
     testTraj1 = TrajectoryGenerator.generateTrajectory(pointList1, new TrajectoryConfig(10, 23).setReversed(true));
   }
@@ -242,8 +242,9 @@ public class Robot extends TimedRobot {
     }
 
     
-    //Right Stick turns turret
-    /*if(m_oi.operator.getRawAxis(0) > 0.1){
+    //Right Stick turns turret, outdated, use position instead of power
+    /*
+    if(m_oi.operator.getRawAxis(0) > 0.1){
       shooter.setTurretPower(.3);
     } else if(m_oi.operator.getRawAxis(0) < -0.1) {
       shooter.setTurretPower(-.3);
@@ -251,35 +252,27 @@ public class Robot extends TimedRobot {
       shooter.setTurretPower(0);
     }
     */
+    
 
       double x_axis = m_oi.operator.getRawAxis(0);
       double y_axis = m_oi.operator.getRawAxis(1);
 
     if((x_axis * x_axis) + (y_axis * y_axis) > 0.25) {
-      shooter.setTurretPositionRadians(m_oi.operator.getDirectionRadians());
+      shooter.setTurretWithLimelight(m_oi.operator.getDirectionRadians());
       System.out.println(m_oi.operator.getDirectionRadians());
     } 
+    //shooter.setTurretWithLimelight(1200);
 
     // shooter.setTurretPosition(12000);
-    //SmartDashboard.putNumber("TurretPosition", ShooterSubsystem.getInstance().getTurretPosition());
+    SmartDashboard.putNumber("TurretPosition", ShooterSubsystem.getInstance().getTurretPositionRadians());
     
-
-    //intake.setIntakeArmPower(m_oi.operator.getRawAxis(5));
-
-    
-
-    //-16440
-    //-9842
-    //1120
-    //12319
-    //16156
-
+    intake.setIntakeArmPower(m_oi.operator.getRawAxis(5));
 
     /*if(m_oi.driver.getRawButton(1)){
       drive.setDriveVelocity(SmartDashboard.getNumber("targetVelL", 0), SmartDashboard.getNumber("targetVelR", 0));
     }*/
 
-    logger.logDoubles("ShooterTuning", currtime, shooter.getFlywheelSpeed()[0], shooter.getFlywheelSpeed()[1]);
+    //logger.logDoubles("ShooterTuning", currtime, shooter.getFlywheelSpeed()[0], shooter.getFlywheelSpeed()[1]);
 
     //runs every 100ms
     //Something about this loop causes nothing to work; crashes code, won't log stuff, etc.
